@@ -1,5 +1,133 @@
+:root {
+    --accent1: #EF8354;
+    --background: #E6EFEC;
+    --header: #2D3142;
+  }
+
+
 html, body {
     margin: 0px;
     padding: 0px;
+    min-height: 100vh;
     position: relative;
+    font-family: "Fira Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+}
+
+
+#header{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--header);
+    z-index: 100;
+    color: white;
+}
+
+.headerLink{
+    font-size: 18px;
+}
+
+#map{
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+}
+.desktop-menu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
+.textMoniker h1{
+    line-height: 36px;
+}
+
+.textMoniker h2 {
+    line-height: 20px;
+}
+
+.mobileLogo{
+    height: 60px;
+    width: auto;
+}
+.desktopLogo{
+    height: 70px;
+    width: auto;
+}
+.headerLinks{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+h1{
+    margin-top: 0px;
+    font-size: 36px;
+    margin-bottom: 0px;
+    font-family: "Archivo Black", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+h2{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 20px;
+    font-family: "Archivo Black", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition : border 200ms ease-out;
+}
+a:hover{
+    border-bottom: 1px solid white;
+}
+
+@media only screen and (max-width: 600px) {
+    #header{
+        padding: 10px;
+        height: 60px;
+        max-height: 60px;
+    }
+    .desktop-menu{
+        display: none;
+    }
+    .mobile-menu{
+        display: flex;
+    }
+    #map{
+        margin-top: 100px;
+        height: calc(100% - 80px);
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    #header{
+        padding: 15px;
+        height: 70px;
+    }
+    .desktop-menu{
+        display: flex;
+    }
+    .mobile-menu{
+        display: none;
+    }
+    #map{
+        margin-top: 100px;
+        height: calc(100% - 100px);
+    }
 }
