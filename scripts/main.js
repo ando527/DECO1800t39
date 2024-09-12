@@ -1,40 +1,142 @@
+var allParks = [];
+var numberOfParks = 200; //initial high value so the code runs the first fetch
+var keepPulling = true;
+var currentOffset = 0;
+var map;
+var markerLayer;
+var userX;
+var userY;
+var distanceFilter;
+var timeFilter;
+var loadingFilterElement;
+
+const customIcon = L.icon({
+    iconUrl: 'images/location.png',
+    iconSize: [15, 15],
+    iconAnchor: [7, 7],
+    popupAnchor: [0, 0]
+});
+
 $( document ).ready(function() {
-    var map = L.map('map').setView([-27.47, 153.02], 13);
+    
+    map = L.map('map').setView([-27.47, 153.02], 13);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+    markerLayer = L.layerGroup().addTo(map);
+    locationLayer = L.layerGroup().addTo(map);
+    loadingFilterElement = document.querySelector('#loadingFilter');
+    //getParks();
 
-    var marker = L.marker([-27.4959193, 153.0117005]).addTo(map);
+    const distanceValue = document.querySelector("#distanceValue");
+    const distanceSlider = document.querySelector("#distance");
+    distanceValue.textContent = distanceSlider.value + "km";
+    distanceFilter = parseInt(distanceSlider.value);
+    distanceSlider.addEventListener("change", (event) => {
+        distanceFilter = parseInt(distanceSlider.value);
+        distanceValue.textContent = distanceSlider.value + "km";
+        markerLayer.clearLayers();
+        loadNewMarkers();
+    });
 
+    const timeValue = document.querySelector("#timeValue");
+    const timeSlider = document.querySelector("#time");
+    timeValue.textContent = timeSlider.value + "hrs";
+    timeFilter = parseInt(timeSlider.value);
+    timeSlider.addEventListener("change", (event) => {
+        timeFilter = parseInt(timeSlider.value);
+        timeValue.textContent = timeSlider.value + "hrs";
+        markerLayer.clearLayers();
+        loadNewMarkers();
+    });
+
+
+    navigator.geolocation.getCurrentPosition((position) => {
+        var marker = L.marker([position.coords.latitude, position.coords.longitude], { icon: customIcon }).addTo(locationLayer);
+        userX = position.coords.latitude;
+        userY = position.coords.longitude;
+        getParks();
+      });
+      
+
+});
+
+
+function loadNewMarkers(){
+    loadingFilterElement.style.opacity = "1";
+    setTimeout(() => {
+        iterateRecordsParksFiltered();
+        setTimeout(() => {loadingFilterElement.style.opacity = "0"}, 250);
+    }, 0);
+}
+
+
+function getParks(){
     var data = {
         resource_id: "brisbane-parking-meters",
     };
+    var allParksTest = localStorage.getItem("allParksLocal");
+    if (!allParksTest){
+        allParksTest = [];
+        $.ajax({
+            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-parking-meters/records?limit=100&offset=" + currentOffset,
+            data: data,
+            dataType: "jsonp", 
+            cache: true,
+            success: function(data) {
+                numberOfParks = data.total_count;
+                allParks = allParks.concat(data.results);
+                currentOffset += 100;
+                
+                if (currentOffset < numberOfParks){
+                    getParks();
+                } else {
+                    loadNewMarkers(); 
+                    localStorage.setItem("allParksLocal",  JSON.stringify(allParks));
 
-    $.ajax({
-        url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-parking-meters/records?limit=100",
-        data: data,
-        dataType: "jsonp", 
-        cache: true,
-        success: function(data) {
-            iterateRecords(data, map); 
-        }
-    });
-});
+                }
+            }
+        });
+    } else{
+        allParks = JSON.parse(allParksTest);
+        loadNewMarkers(); 
+        console.log("SAVEDEMMMMM");
+    }
+}
 
-function iterateRecords(data, map) { 
-    console.log(data); 
-
-    $.each(data.results, function(recordID, recordValue) {
-        console.log(recordValue);
-
+function iterateRecordsParks(data) { 
+    $.each(data, function(recordID, recordValue) {
         var recordLatitude = recordValue["latitude"];
         var recordLongitude = recordValue["longitude"];
-
         if (recordLatitude && recordLongitude) {
-            var marker = L.marker([recordLatitude, recordLongitude]).addTo(map); 
-            var popupText = "";
+            var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
+            var popupText = recordValue["meter_no"];
             marker.bindPopup(popupText).openPopup();
         }
     });
+}
+
+function iterateRecordsParksFiltered() { 
+    
+    $.each(allParks, function(recordID, recordValue) {
+        var recordLatitude = recordValue["latitude"];
+        var recordLongitude = recordValue["longitude"];
+        if (recordLatitude && recordLongitude) {
+            if(parseInt(recordValue["max_stay_hrs"]) < timeFilter){
+                if (withinRange(recordLatitude, recordLongitude)){
+                    var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
+                    var popupText = recordValue["meter_no"];
+                    marker.bindPopup(popupText).openPopup();
+                }
+            }
+        }
+    });
+}
+
+function withinRange(pointX, pointY){
+    if (Math.sqrt((pointX-userX)*(pointX-userX)+(pointY-userY)*(pointY-userY)) < distanceFilter/111){
+        return true;
+    }
+    return false;
 }
