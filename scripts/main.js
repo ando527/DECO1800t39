@@ -123,7 +123,7 @@ function iterateRecordsParksFiltered() {
         var recordLatitude = recordValue["latitude"];
         var recordLongitude = recordValue["longitude"];
         if (recordLatitude && recordLongitude) {
-            if(parseInt(recordValue["max_stay_hrs"]) < timeFilter){
+            if(parseInt(recordValue["max_stay_hrs"]) >= timeFilter){
                 if (withinRange(recordLatitude, recordLongitude)){
                     var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
                     var popupText = recordValue["meter_no"];

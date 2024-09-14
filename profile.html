@@ -6,13 +6,51 @@
         <link rel="stylesheet" href="css/leaflet.css" />
         <script src="scripts/leaflet.js"></script>
         <link rel="icon" type="image/png" href="images/favicon.png" />
-        <script src="scripts/main.js"></script>
+        <script src="scripts/profile.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     </head>
     <body>
-
+        <div id="header">
+            <div class="mobile-menu">
+                <a href="index.html"><img src="images/whiteLogo.svg" class="mobileLogo"/></a>
+                <div class="headerLinks">
+                    <a href="roo.html" class="headerLink">YouRoo</a>
+                    <a href="profile.html" class="headerLink">Profile</a>
+                    <a href="index.html" class="headerLink">Map</a>
+                </div>
+            </div>
+            <div class="desktop-menu">
+                <a href="index.html"><img src="images/whiteLogo.svg" class="desktopLogo"/></a>
+                <div class="headerLinks">
+                    <a href="roo.html" class="headerLink">YouRoo</a>
+                    <a href="profile.html" class="headerLink">Profile</a>
+                    <a href="index.html" class="headerLink">Map</a>
+                </div>
+                <div class="textMoniker">
+                    <h1>ParkaRoo</h1>
+                    <h2>Make Parking Fun!</h2>
+                </div>
+            </div>
+        </div>
+        <div id="profileHolder">
+            <div id="profileBox">
+                <div id="headBox">
+                    <img src="images/profileBlank.png" id="profilePhoto"/>
+                    <input type="file" id="fileInput" accept="image/*">
+                    <h2 id="profileName">John Tomy</h2>
+                </div>
+                <div id="infoBox">
+                    <h2>Home Address:</h2>
+                    <div><input type="text" id="addressBox"></input></div>
+                    <h2>Preferences:</h2>
+                    <div class="toggleHolder"><input type="checkbox" name="parkingPriority" id="parkingCheck"></input><div>Prioritise Parking Price</div></div>
+                    <div class="toggleHolder"><input type="checkbox" name="distancePriority" id="distanceCheck"></input><div>Prioritise Parking Distance</div></div>
+                    <div onClick="updateAddress()" class="button">Update</div>
+                </div>
+            </div>
+        </div>
     </body>
     </html>

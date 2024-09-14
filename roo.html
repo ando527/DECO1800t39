@@ -1,18 +1,76 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="css/slick.css" />
+        <link rel="stylesheet" href="css/slick-theme.css" />
         <script src="scripts/jquery-3.7.1.min.js"></script>
+        <script src="scripts/slick.min.js"></script>
         <link rel="stylesheet" href="css/styles.css" />
         <link rel="stylesheet" href="css/leaflet.css" />
         <script src="scripts/leaflet.js"></script>
         <link rel="icon" type="image/png" href="images/favicon.png" />
-        <script src="scripts/main.js"></script>
+        <script src="scripts/roo.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     </head>
     <body>
-
+        <div id="header">
+            <div class="mobile-menu">
+                <a href="index.html"><img src="images/whiteLogo.svg" class="mobileLogo"/></a>
+                <div class="headerLinks">
+                    <a href="roo.html" class="headerLink">YouRoo</a>
+                    <a href="profile.html" class="headerLink">Profile</a>
+                    <a href="index.html" class="headerLink">Map</a>
+                </div>
+            </div>
+            <div class="desktop-menu">
+                <a href="index.html"><img src="images/whiteLogo.svg" class="desktopLogo"/></a>
+                <div class="headerLinks">
+                    <a href="roo.html" class="headerLink">YouRoo</a>
+                    <a href="profile.html" class="headerLink">Profile</a>
+                    <a href="index.html" class="headerLink">Map</a>
+                </div>
+                <div class="textMoniker">
+                    <h1>ParkaRoo</h1>
+                    <h2>Make Parking Fun!</h2>
+                </div>
+            </div>
+        </div>
+        <div id="roopage">
+            <div class="roo">
+                <img src="images/kangaroo_base.png" class="base_character"/>
+                <img src="images/roo_top.png" id="hatImg"/>
+                <img src="images/roo_mid.png" id="topImg"/>
+                <img src="images/roo_bottom.png" id="shoesImg"/>
+            </div>
+            <div id="accessories">
+                <h3>Hat</h3>
+                <div class="indivAccessorySlider">
+                    <div class="accessory redBand" data-hat="red_band" onClick="loadHat(this)">Band</div>
+                    <div class="accessory purpleBand" data-hat="purple_band" onClick="loadHat(this)">Band</div>
+                    <div class="accessory greenBand" data-hat="green_band" onClick="loadHat(this)">Band</div>
+                    <div class="accessory pinkHat" data-hat="pink_hat" onClick="loadHat(this)"></div>
+                    <div class="accessory blueHat" data-hat="blue_hat" onClick="loadHat(this)"></div>
+                </div>
+                <h3>Top</h3>
+                <div class="indivAccessorySlider">
+                    <div class="accessory redTop" data-top="red" onClick="loadTop(this)"></div>
+                    <div class="accessory purpleTop" data-top="purple" onClick="loadTop(this)"></div>
+                    <div class="accessory greenTop" data-top="green" onClick="loadTop(this)"></div>
+                    <div class="accessory pinkTop" data-top="pink" onClick="loadTop(this)"></div>
+                    <div class="accessory blueTop" data-top="blue" onClick="loadTop(this)"></div>
+                </div>
+                <h3>Shoes</h3>
+                <div class="indivAccessorySlider">
+                    <div class="accessory redShoe" data-shoe="red" onClick="loadShoe(this)"></div>
+                    <div class="accessory purpleShoe" data-shoe="purple" onClick="loadShoe(this)"></div>
+                    <div class="accessory greenShoe" data-shoe="green" onClick="loadShoe(this)"></div>
+                    <div class="accessory pinkShoe" data-shoe="pink" onClick="loadShoe(this)"></div>
+                    <div class="accessory blueShoe" data-shoe="blue" onClick="loadShoe(this)"></div>
+                </div>
+            </div>
+        </div>
     </body>
     </html>
