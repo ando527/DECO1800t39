@@ -4,6 +4,7 @@ var keepPulling = true;
 var currentOffset = 0;
 var map;
 var markerLayer;
+var disabilityLayer;
 var userX;
 var userY;
 var distanceFilter;
@@ -25,6 +26,7 @@ $( document ).ready(function() {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
+    disabilityLayer = L.layerGroup().addTo(map);
     locationLayer = L.layerGroup().addTo(map);
     loadingFilterElement = document.querySelector('#loadingFilter');
     //getParks();
@@ -113,7 +115,7 @@ function getDisabled(){
     if (!disabilityTest){
         disabilityTest = [];
         $.ajax({
-            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100" + currentOffset,
+            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + currentOffset,
             data: data,
             dataType: 'jsonp',
             cache: true,
@@ -162,6 +164,21 @@ function iterateRecordsParksFiltered() {
                     var popupText = recordValue["meter_no"];
                     marker.bindPopup(popupText).openPopup();
                 }
+            }
+        }
+    });
+}
+
+function iterateDisabledParksFiltered() { 
+    
+    $.each(allDisabledParks, function(recordID, recordValue) {
+        var recordLatitude = recordValue["latitude"];
+        var recordLongitude = recordValue["longitude"];
+        if (recordLatitude && recordLongitude) {
+            if (withinRange(recordLatitude, recordLongitude)){
+                var marker = L.marker([recordLatitude, recordLongitude]).addTo(disabilityLayer); 
+                var popupText = recordValue["zone_id"];
+                marker.bindPopup(popupText).openPopup();
             }
         }
     });
