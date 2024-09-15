@@ -2,8 +2,10 @@ var allParks = [];
 var numberOfParks = 200; //initial high value so the code runs the first fetch
 var keepPulling = true;
 var currentOffset = 0;
+var disablityOffset = 0;
 var map;
 var markerLayer;
+var disabilityLayer;
 var userX;
 var userY;
 var distanceFilter;
@@ -25,6 +27,7 @@ $( document ).ready(function() {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
+    disabilityLayer = L.layerGroup().addTo(map);
     locationLayer = L.layerGroup().addTo(map);
     loadingFilterElement = document.querySelector('#loadingFilter');
     //getParks();
@@ -67,6 +70,7 @@ function loadNewMarkers(){
     loadingFilterElement.style.opacity = "1";
     setTimeout(() => {
         iterateRecordsParksFiltered();
+        iterateDisabledParksFiltered();
         setTimeout(() => {loadingFilterElement.style.opacity = "0"}, 250);
     }, 0);
 }
@@ -105,13 +109,46 @@ function getParks(){
     }
 }
 
+function getDisabled(){
+    var data = {
+        resource_id: "disability-permit-parking-locations",
+    };
+    var disabilityTest = localStorage.getItem("disabilityParks");
+    if (!disabilityTest){
+        disabilityTest = [];
+        $.ajax({
+            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + disablityOffset,
+            data: data,
+            dataType: 'jsonp',
+            cache: true,
+            success: function(data) {
+                numberOfDisabledParks = data.total_count;
+                allDisabledParks = allDisabledParks.concat(data.results)
+                disablityOffset += 100;
+
+                if (disablityOffset < numberOfDisabledParks){
+                    getDisabled(); 
+                } else {
+                    loadNewMarkers();
+                    localStorage.setItem("disabilityParks", JSON.stringify(allDisabledParks));
+                
+                }
+            }
+        })
+    } else {
+        allDisabledParks = JSON.parse(disabilityTest);
+        loadNewMarkers()
+        console.log("SAVE THEM AGAIN");
+    }
+}
+
 function iterateRecordsParks(data) { 
     $.each(data, function(recordID, recordValue) {
         var recordLatitude = recordValue["latitude"];
         var recordLongitude = recordValue["longitude"];
         if (recordLatitude && recordLongitude) {
             var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
-            var popupText = recordValue["meter_no"];
+            var popupText = recordValue["street"];
             marker.bindPopup(popupText).openPopup();
         }
     });
@@ -129,6 +166,21 @@ function iterateRecordsParksFiltered() {
                     var popupText = recordValue["meter_no"];
                     marker.bindPopup(popupText).openPopup();
                 }
+            }
+        }
+    });
+}
+
+function iterateDisabledParksFiltered() { 
+    
+    $.each(allDisabledParks, function(recordID, recordValue) {
+        var recordLatitude = recordValue["latitude"];
+        var recordLongitude = recordValue["longitude"];
+        if (recordLatitude && recordLongitude) {
+            if (withinRange(recordLatitude, recordLongitude)){
+                var marker = L.marker([recordLatitude, recordLongitude]).addTo(disabilityLayer); 
+                var popupText = recordValue["zone_id"];
+                marker.bindPopup(popupText).openPopup();
             }
         }
     });
