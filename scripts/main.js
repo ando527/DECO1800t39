@@ -105,6 +105,39 @@ function getParks(){
     }
 }
 
+function getDisabled(){
+    var data = {
+        resource_id: "disability-permit-parking-locations",
+    };
+    var disabilityTest = localStorage.getItem("disabledParks");
+    if (!disabilityTest){
+        disabilityTest = [];
+        $.ajax({
+            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100" + currentOffset,
+            data: data,
+            dataType: 'jsonp',
+            cache: true,
+            success: function(data) {
+                numberOfDisabledParks = data.total_count;
+                allDisabledParks = allParks.concat(dara.results)
+                currentOffset += 100;
+
+                if (currentOffset < numberOfDisabledParks){
+                    getDisabled(); 
+                } else {
+                    loadNewMarkers();
+                    localStorage.setItem("allDisabledLocal", JSON.stringify(allDisabledParks));
+                
+                }
+            }
+        })
+    } else {
+        allDisabledParks = JSON.parse(disabilityTest);
+        loadNewMarkers()
+        console.log("SAVE THEM AGAIN");
+    }
+}
+
 function iterateRecordsParks(data) { 
     $.each(data, function(recordID, recordValue) {
         var recordLatitude = recordValue["latitude"];
