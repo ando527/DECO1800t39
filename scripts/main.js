@@ -2,6 +2,7 @@ var allParks = [];
 var numberOfParks = 200; //initial high value so the code runs the first fetch
 var keepPulling = true;
 var currentOffset = 0;
+var disablityOffset = 0;
 var map;
 var markerLayer;
 var disabilityLayer;
@@ -69,6 +70,7 @@ function loadNewMarkers(){
     loadingFilterElement.style.opacity = "1";
     setTimeout(() => {
         iterateRecordsParksFiltered();
+        iterateDisabledParksFiltered();
         setTimeout(() => {loadingFilterElement.style.opacity = "0"}, 250);
     }, 0);
 }
@@ -111,24 +113,24 @@ function getDisabled(){
     var data = {
         resource_id: "disability-permit-parking-locations",
     };
-    var disabilityTest = localStorage.getItem("disabledParks");
+    var disabilityTest = localStorage.getItem("disabilityParks");
     if (!disabilityTest){
         disabilityTest = [];
         $.ajax({
-            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + currentOffset,
+            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + disablityOffset,
             data: data,
             dataType: 'jsonp',
             cache: true,
             success: function(data) {
                 numberOfDisabledParks = data.total_count;
-                allDisabledParks = allParks.concat(dara.results)
-                currentOffset += 100;
+                allDisabledParks = allDisabledParks.concat(data.results)
+                disablityOffset += 100;
 
-                if (currentOffset < numberOfDisabledParks){
+                if (disablityOffset < numberOfDisabledParks){
                     getDisabled(); 
                 } else {
                     loadNewMarkers();
-                    localStorage.setItem("allDisabledLocal", JSON.stringify(allDisabledParks));
+                    localStorage.setItem("disabilityParks", JSON.stringify(allDisabledParks));
                 
                 }
             }
@@ -146,7 +148,7 @@ function iterateRecordsParks(data) {
         var recordLongitude = recordValue["longitude"];
         if (recordLatitude && recordLongitude) {
             var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
-            var popupText = recordValue["meter_no"];
+            var popupText = recordValue["street"];
             marker.bindPopup(popupText).openPopup();
         }
     });
