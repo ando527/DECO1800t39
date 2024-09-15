@@ -1,5 +1,7 @@
 var allParks = [];
+var allDisabledParks = [];
 var numberOfParks = 200; //initial high value so the code runs the first fetch
+var numberOfDisabledParks = 200;
 var keepPulling = true;
 var currentOffset = 0;
 var disablityOffset = 0;
@@ -11,10 +13,18 @@ var userY;
 var distanceFilter;
 var timeFilter;
 var loadingFilterElement;
+var showDisabled = false;
 
 const customIcon = L.icon({
     iconUrl: 'images/location.png',
     iconSize: [15, 15],
+    iconAnchor: [7, 7],
+    popupAnchor: [0, 0]
+});
+
+const dIcon = L.icon({
+    iconUrl: 'css/images/disabled-icon.png',
+
     iconAnchor: [7, 7],
     popupAnchor: [0, 0]
 });
@@ -34,13 +44,23 @@ $( document ).ready(function() {
 
     const distanceValue = document.querySelector("#distanceValue");
     const distanceSlider = document.querySelector("#distance");
+    const disabledCheckBox = document.querySelector("#disabledCheck");
     distanceValue.textContent = distanceSlider.value + "km";
     distanceFilter = parseInt(distanceSlider.value);
     distanceSlider.addEventListener("change", (event) => {
         distanceFilter = parseInt(distanceSlider.value);
         distanceValue.textContent = distanceSlider.value + "km";
         markerLayer.clearLayers();
+        disabilityLayer.clearLayers();
         loadNewMarkers();
+    });
+
+    disabledCheckBox.addEventListener("change", (event) => {
+        showDisabled = disabledCheckBox.checked;
+        markerLayer.clearLayers();
+        disabilityLayer.clearLayers();
+        loadNewMarkers();
+
     });
 
     const timeValue = document.querySelector("#timeValue");
@@ -60,6 +80,7 @@ $( document ).ready(function() {
         userX = position.coords.latitude;
         userY = position.coords.longitude;
         getParks();
+        getDisabled();
       });
       
 
@@ -69,8 +90,11 @@ $( document ).ready(function() {
 function loadNewMarkers(){
     loadingFilterElement.style.opacity = "1";
     setTimeout(() => {
-        iterateRecordsParksFiltered();
-        iterateDisabledParksFiltered();
+        if (!showDisabled){
+            iterateRecordsParksFiltered();
+        } else {
+            iterateDisabledParksFiltered();
+        }
         setTimeout(() => {loadingFilterElement.style.opacity = "0"}, 250);
     }, 0);
 }
@@ -123,7 +147,7 @@ function getDisabled(){
             cache: true,
             success: function(data) {
                 numberOfDisabledParks = data.total_count;
-                allDisabledParks = allDisabledParks.concat(data.results)
+                allDisabledParks = allDisabledParks.concat(data.results);
                 disablityOffset += 100;
 
                 if (disablityOffset < numberOfDisabledParks){
@@ -178,9 +202,9 @@ function iterateDisabledParksFiltered() {
         var recordLongitude = recordValue["longitude"];
         if (recordLatitude && recordLongitude) {
             if (withinRange(recordLatitude, recordLongitude)){
-                var marker = L.marker([recordLatitude, recordLongitude]).addTo(disabilityLayer); 
-                var popupText = recordValue["zone_id"];
-                marker.bindPopup(popupText).openPopup();
+                var markerD = L.marker([recordLatitude, recordLongitude], { icon: dIcon }).addTo(disabilityLayer); 
+                //var popupTextD = recordValue["zone_id"];
+                //markerD.bindPopup(popupTextD).openPopup();
             }
         }
     });
