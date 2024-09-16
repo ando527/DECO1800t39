@@ -45,6 +45,8 @@ $( document ).ready(function() {
     const distanceValue = document.querySelector("#distanceValue");
     const distanceSlider = document.querySelector("#distance");
     const disabledCheckBox = document.querySelector("#disabledCheck");
+    const filterButton = document.querySelector("#filterButton");
+    const closeFilter = document.querySelector("#closeFilters");
     distanceValue.textContent = distanceSlider.value + "km";
     distanceFilter = parseInt(distanceSlider.value);
     distanceSlider.addEventListener("change", (event) => {
@@ -61,6 +63,16 @@ $( document ).ready(function() {
         disabilityLayer.clearLayers();
         loadNewMarkers();
 
+    });
+
+    filterButton.addEventListener("click", (event) => {
+        document.querySelector("#sidebar").style.display="flex";
+        filterButton.style.display="none";
+    });
+
+    closeFilter.addEventListener("click", (event) => {
+        document.querySelector("#sidebar").style.display="none";
+        filterButton.style.display="flex";
     });
 
     const timeValue = document.querySelector("#timeValue");
