@@ -13,6 +13,7 @@ var profilePic;
 
 $( document ).ready(function() {
     addressBox = document.querySelector("#addressBox");
+    nameBox = document.querySelector("#nameBox");
     parkingCheck = document.querySelector("#parkingCheck");
     distanceCheck = document.querySelector("#distanceCheck");
     nameText = document.querySelector("#profileName");
@@ -27,14 +28,15 @@ $( document ).ready(function() {
         addressBox.value = address;
     }
     if (parkingPriority){
-        parkingCheck.checked = parkingPriority;
+        parkingCheck.checked = parkingPriority == 'true';
 
     }
-    if (distancePriority == "on"){
-        distanceCheck.checked = distancePriority;
+    if (distancePriority){
+        distanceCheck.checked = distancePriority == 'true';
     }
     if (profileName){
-        nameText.value = profileName;
+        nameText.innerHTML = profileName;
+        nameBox.value = profileName;
     }
     if (savedProfileImage){
         profilePic.src = savedProfileImage;
@@ -62,4 +64,6 @@ function updateAddress(){
     localStorage.setItem("address", addressBox.value);
     localStorage.setItem("parkingPriority", parkingCheck.checked);
     localStorage.setItem("distancePriority", distanceCheck.checked);
+    localStorage.setItem("name", nameBox.value);
+    nameText.innerHTML = nameBox.value;
 }

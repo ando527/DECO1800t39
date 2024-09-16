@@ -275,6 +275,10 @@ input:checked + .disabledSlider:before {
     background-color: #5464ef;
 }
 
+#profileName{
+    text-transform: capitalize;
+}
+
 
 @media only screen and (max-width: 600px) {
     #header{
