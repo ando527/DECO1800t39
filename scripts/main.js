@@ -234,11 +234,18 @@ function iterateRecordsParksFiltered() {
                 if(parseFloat(recordValue["tar_rate_weekday"]) <= priceFilter){
                     if (withinRange(recordLatitude, recordLongitude)){
                         var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
-                        var popupText = "Meter No. " + recordValue["meter_no"] + "<br />" 
-                                        + "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
-                                        + "Cap: $" + truncatePrices(recordValue["max_cap_chg"]) + "<br />" 
-                                        + "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
-                                        + "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km";
+						if (recordValue["max_cap_chg"] != null){
+							var popupText = "Meter No. " + recordValue["meter_no"] + "<br />" 
+											+ "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
+											+ "Cap: $" + truncatePrices(recordValue["max_cap_chg"]) + "<br />" 
+											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
+											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km";
+						} else {
+							var popupText = "Meter No. " + recordValue["meter_no"] + "<br />" 
+											+ "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
+											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
+											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km";
+						}
                         marker.bindPopup(popupText).openPopup();
                     }
                 }

@@ -282,6 +282,10 @@ input:checked + .disabledSlider:before {
     text-transform: capitalize;
 }
 
+.leaflet-popup-content{
+    font-family: "Fira Mono";
+}
+
 
 @media only screen and (max-width: 600px) {
     #header{
