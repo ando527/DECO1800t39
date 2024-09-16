@@ -11,9 +11,15 @@ var disabilityLayer;
 var userX;
 var userY;
 var distanceFilter;
+var priceFilter;
 var timeFilter;
 var loadingFilterElement;
 var showDisabled = false;
+var shoesUrl;
+var topUrl;
+var hatUrl;
+
+
 
 const customIcon = L.icon({
     iconUrl: 'images/location.png',
@@ -44,6 +50,8 @@ $( document ).ready(function() {
 
     const distanceValue = document.querySelector("#distanceValue");
     const distanceSlider = document.querySelector("#distance");
+    const priceSlider = document.querySelector("#price");
+    const priceValue = document.querySelector("#priceValue");
     const disabledCheckBox = document.querySelector("#disabledCheck");
     const filterButton = document.querySelector("#filterButton");
     const closeFilter = document.querySelector("#closeFilters");
@@ -57,6 +65,16 @@ $( document ).ready(function() {
         loadNewMarkers();
     });
 
+    priceValue.textContent = "$" + priceSlider.value;
+    priceFilter = parseFloat(priceSlider.value);
+    priceSlider.addEventListener("change", (event) => {
+        priceFilter = parseInt(priceSlider.value);
+        priceValue.textContent = "$" + priceSlider.value;
+        markerLayer.clearLayers();
+        disabilityLayer.clearLayers();
+        loadNewMarkers();
+    });
+
     disabledCheckBox.addEventListener("change", (event) => {
         showDisabled = disabledCheckBox.checked;
         markerLayer.clearLayers();
@@ -64,6 +82,22 @@ $( document ).ready(function() {
         loadNewMarkers();
 
     });
+
+    hatUrl = localStorage.getItem("hat");
+    shoesUrl = localStorage.getItem("shoe");
+    topUrl = localStorage.getItem("top");
+
+    if (hatUrl || shoesUrl || topUrl){
+        if (hatUrl){
+            document.querySelector("#topRooMap").src= hatUrl;
+        }
+        if (topUrl){
+            document.querySelector("#midRooMap").src= topUrl;
+        }
+        if (shoesUrl){
+            document.querySelector("#bottomRooMap").src= shoesUrl;
+        }
+    }
 
     filterButton.addEventListener("click", (event) => {
         document.querySelector("#sidebar").style.display="flex";
@@ -197,10 +231,16 @@ function iterateRecordsParksFiltered() {
         var recordLongitude = recordValue["longitude"];
         if (recordLatitude && recordLongitude) {
             if(parseInt(recordValue["max_stay_hrs"]) >= timeFilter){
-                if (withinRange(recordLatitude, recordLongitude)){
-                    var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
-                    var popupText = recordValue["meter_no"];
-                    marker.bindPopup(popupText).openPopup();
+                if(parseFloat(recordValue["tar_rate_weekday"]) <= priceFilter){
+                    if (withinRange(recordLatitude, recordLongitude)){
+                        var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
+                        var popupText = "Meter No. " + recordValue["meter_no"] + "<br />" 
+                                        + "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
+                                        + "Cap: $" + truncatePrices(recordValue["max_cap_chg"]) + "<br />" 
+                                        + "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
+                                        + "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km";
+                        marker.bindPopup(popupText).openPopup();
+                    }
                 }
             }
         }
@@ -228,3 +268,15 @@ function withinRange(pointX, pointY){
     }
     return false;
 }
+
+function howFar(pointX, pointY){
+    return (111 * Math.sqrt((pointX-userX)*(pointX-userX)+(pointY-userY)*(pointY-userY))).toFixed(2);
+}
+
+function truncatePrices(price) {
+    let index = price.indexOf("/");
+    if (index !== -1) {
+      return price.substring(0, index);
+    }
+    return price;
+  }
