@@ -262,8 +262,11 @@ function iterateDisabledParksFiltered() {
         if (recordLatitude && recordLongitude) {
             if (withinRange(recordLatitude, recordLongitude)){
                 var markerD = L.marker([recordLatitude, recordLongitude], { icon: dIcon }).addTo(disabilityLayer); 
-                //var popupTextD = recordValue["zone_id"];
-                //markerD.bindPopup(popupTextD).openPopup();
+                var popupTextD = "Zone id: " + recordValue["zone_id"] + "<br />" 
+                                + "Parking Limit: " + recordValue["parking_limit"] + "<br />" 
+                                + "Location: " + recordValue["objectid"] + " " + recordValue["street"].toLowerCase() + "<br />" 
+                                + "Distance from you: " + howFar(recordLatitude, recordLongitude) +  "km";
+                markerD.bindPopup(popupTextD).openPopup();
             }
         }
     });
