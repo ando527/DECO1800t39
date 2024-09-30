@@ -115,6 +115,12 @@ a:hover{
     border: 2px solid black;
 }
 
+.small{
+    padding: 2px 4px 2px 4px;
+    font-size: 1em;
+    color: black!important;
+}
+
 .slider{
     -webkit-appearance: none;
     appearance: none;

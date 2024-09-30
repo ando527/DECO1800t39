@@ -239,12 +239,14 @@ function iterateRecordsParksFiltered() {
 											+ "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
 											+ "Cap: $" + truncatePrices(recordValue["max_cap_chg"]) + "<br />" 
 											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
-											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km";
+											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km"
+                                            + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>";
 						} else {
 							var popupText = "Meter No. " + recordValue["meter_no"] + "<br />" 
 											+ "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
 											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
-											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km";
+											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km"
+                                            + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>";
 						}
                         marker.bindPopup(popupText).openPopup();
                     }
@@ -265,7 +267,8 @@ function iterateDisabledParksFiltered() {
                 var popupTextD = "Zone id: " + recordValue["zone_id"] + "<br />" 
                                 + "Parking Limit: " + recordValue["parking_limit"] + "<br />" 
                                 + "Location: " + recordValue["objectid"] + " " + recordValue["street"].toLowerCase() + "<br />" 
-                                + "Distance from you: " + howFar(recordLatitude, recordLongitude) +  "km";
+                                + "Distance from you: " + howFar(recordLatitude, recordLongitude) +  "km"
+                                + "<br /><br /><a class=\"button small\" href=\"parking.html#d" + recordValue["zone_id"] + "\">Park Details</a>";
                 markerD.bindPopup(popupTextD).openPopup();
             }
         }
