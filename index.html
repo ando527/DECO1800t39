@@ -5,12 +5,15 @@
         <link rel="stylesheet" href="css/styles.css" />
         <link rel="stylesheet" href="css/leaflet.css" />
         <script src="scripts/leaflet.js"></script>
+        <link rel="stylesheet" href="css/leaflet-routing-machine.css" />
+        <script src="scripts/leaflet-routing-machine.js"></script>
         <link rel="icon" type="image/png" href="images/favicon.png" />
         <script src="scripts/main.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
     </head>
     <body>
         <div id="header">
@@ -57,7 +60,7 @@
                     <span class="disabledSlider"></span>
                 </label>
             </div>
-            <div class="button">RooPark!</div>
+            <div class="button" id="rooPark">RooPark!</div>
         </div>
         <div id="rooMap">
             <img src="images/kangaroo_base.png" id="baseRooMap"/>

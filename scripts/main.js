@@ -18,7 +18,11 @@ var showDisabled = false;
 var shoesUrl;
 var topUrl;
 var hatUrl;
+var rooParkButton;
 
+var mapBoxKey = "pk.eyJ1IjoiYW5kbzUyNyIsImEiOiJjbTFwbmJyaXEwNmIwMm5xMnFoOGd5dDdrIn0.3EvqnTYY5gIlOKehtLG9xQ";
+var bestSpot;
+var bestDistance = 0;
 
 
 const customIcon = L.icon({
@@ -55,6 +59,7 @@ $( document ).ready(function() {
     const disabledCheckBox = document.querySelector("#disabledCheck");
     const filterButton = document.querySelector("#filterButton");
     const closeFilter = document.querySelector("#closeFilters");
+    rooParkButton = document.querySelector("#rooPark");
     distanceValue.textContent = distanceSlider.value + "km";
     distanceFilter = parseInt(distanceSlider.value);
     distanceSlider.addEventListener("change", (event) => {
@@ -102,6 +107,10 @@ $( document ).ready(function() {
     filterButton.addEventListener("click", (event) => {
         document.querySelector("#sidebar").style.display="flex";
         filterButton.style.display="none";
+    });
+
+    rooParkButton.addEventListener("click", (event) => {
+        navigateClosest();
     });
 
     closeFilter.addEventListener("click", (event) => {
@@ -175,7 +184,7 @@ function getParks(){
     } else{
         allParks = JSON.parse(allParksTest);
         loadNewMarkers(); 
-        console.log("SAVEDEMMMMM");
+        //console.log("SAVEDEMMMMM");
     }
 }
 
@@ -208,7 +217,7 @@ function getDisabled(){
     } else {
         allDisabledParks = JSON.parse(disabilityTest);
         loadNewMarkers()
-        console.log("SAVE THEM AGAIN");
+        //console.log("SAVE THEM AGAIN");
     }
 }
 
@@ -225,11 +234,13 @@ function iterateRecordsParks(data) {
 }
 
 function iterateRecordsParksFiltered() { 
-    
+    bestDistance = 0;
     $.each(allParks, function(recordID, recordValue) {
         var recordLatitude = recordValue["latitude"];
         var recordLongitude = recordValue["longitude"];
+        var distTemp;
         if (recordLatitude && recordLongitude) {
+            distTemp = howFar(recordLatitude, recordLongitude);
             if(parseInt(recordValue["max_stay_hrs"]) >= timeFilter){
                 if(parseFloat(recordValue["tar_rate_weekday"]) <= priceFilter){
                     if (withinRange(recordLatitude, recordLongitude)){
@@ -239,21 +250,32 @@ function iterateRecordsParksFiltered() {
 											+ "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
 											+ "Cap: $" + truncatePrices(recordValue["max_cap_chg"]) + "<br />" 
 											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
-											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km"
+											+ "Distance from you: " + distTemp + "km"
                                             + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>";
 						} else {
 							var popupText = "Meter No. " + recordValue["meter_no"] + "<br />" 
 											+ "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
 											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
-											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km"
+											+ "Distance from you: " + distTemp + "km"
                                             + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>";
 						}
                         marker.bindPopup(popupText).openPopup();
+                        if (bestDistance == 0){
+                            bestDistance = distTemp;
+                            bestSpot = recordValue["meter_no"];
+                        } else {
+                            if (distTemp < bestDistance){
+                                bestDistance = distTemp;
+                                bestSpot = recordValue["meter_no"];
+                            }
+                        }
                     }
                 }
             }
         }
+        
     });
+
 }
 
 function iterateDisabledParksFiltered() { 
@@ -292,4 +314,19 @@ function truncatePrices(price) {
       return price.substring(0, index);
     }
     return price;
+  }
+
+  function navigateClosest(){
+    var closestPark = allParks.filter(obj => {
+        return obj.meter_no.toString() === bestSpot
+      })
+      if (closestPark){
+      L.Routing.control({
+            waypoints: [
+                L.latLng(userX, userY),
+                L.latLng(closestPark[0].latitude, closestPark[0].longitude)
+            ],
+            router: L.Routing.mapbox(mapBoxKey)
+        }).addTo(map);
+    }
   }
