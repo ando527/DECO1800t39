@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="scripts/jquery-3.7.1.min.js"></script>
+        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/leaflet.css" />
+        <script src="scripts/leaflet.js"></script>
+        <link rel="icon" type="image/png" href="images/favicon.png" />
+        <script src="scripts/parking.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div id="header">
+            <div class="mobile-menu">
+                <a href="index.html"><img src="images/whiteLogo.svg" class="mobileLogo"/></a>
+                <div class="headerLinks">
+                    <a href="roo.html" class="headerLink">YouRoo</a>
+                    <a href="profile.html" class="headerLink">Profile</a>
+                    <a href="index.html" class="headerLink">Map</a>
+                </div>
+            </div>
+            <div class="desktop-menu">
+                <a href="index.html"><img src="images/whiteLogo.svg" class="desktopLogo"/></a>
+                <div class="headerLinks">
+                    <a href="roo.html" class="headerLink">YouRoo</a>
+                    <a href="profile.html" class="headerLink">Profile</a>
+                    <a href="index.html" class="headerLink">Map</a>
+                </div>
+                <div class="textMoniker">
+                    <h1>ParkaRoo</h1>
+                    <h2>Make Parking Fun!</h2>
+                </div>
+            </div>
+        </div>
+        <div id="parkingInfo">
+                <div id="parkingMap"></div>
+                <div id="parkingLocation"></div>
+            <div id="infoHolder">
+                <h2>Parking Spot Name</h2>
+                <h4>Maximum Parking Time:</h4>
+                <h4>Popular Times:</h4>
+                <img src="images/favicon.png"> <!-- Placeholder image -->
+                <h4>Parking Cost:</h4>
+                <h4>Distance From You:</h4>
+                <h1 id="navigate">Navigate!</h1>
+            </div>
+        </div>
+    </body>
+    </html>
