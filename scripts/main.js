@@ -11,6 +11,8 @@ var disabilityLayer;
 var userX;
 var userY;
 var distanceFilter;
+var locationLayer;
+var locationRadius;
 var priceFilter;
 var timeFilter;
 var loadingFilterElement;
@@ -27,6 +29,8 @@ const customIcon = L.icon({
     iconAnchor: [7, 7],
     popupAnchor: [0, 0]
 });
+
+
 
 const dIcon = L.icon({
     iconUrl: 'css/images/disabled-icon.png',
@@ -48,6 +52,8 @@ $( document ).ready(function() {
     loadingFilterElement = document.querySelector('#loadingFilter');
     //getParks();
 
+    
+
     const distanceValue = document.querySelector("#distanceValue");
     const distanceSlider = document.querySelector("#distance");
     const priceSlider = document.querySelector("#price");
@@ -59,6 +65,7 @@ $( document ).ready(function() {
     distanceFilter = parseInt(distanceSlider.value);
     distanceSlider.addEventListener("change", (event) => {
         distanceFilter = parseInt(distanceSlider.value);
+        locationRadius.setRadius (distanceFilter*1000);
         distanceValue.textContent = distanceSlider.value + "km";
         markerLayer.clearLayers();
         disabilityLayer.clearLayers();
@@ -125,6 +132,10 @@ $( document ).ready(function() {
         var marker = L.marker([position.coords.latitude, position.coords.longitude], { icon: customIcon }).addTo(locationLayer);
         userX = position.coords.latitude;
         userY = position.coords.longitude;
+        locationRadius = L.circle([userX, userY], {
+            radius: distanceFilter*1000,
+            color: '#4f5d75',
+            fillOpacity: 0.1}).addTo(locationLayer);
         getParks();
         getDisabled();
       });
