@@ -110,6 +110,12 @@ a:hover{
     border: 2px solid transparent;
     transition: border 250ms;
 }
+.small{
+    padding: 2px 4px 2px 4px;
+    font-size: 1em;
+    color: black!important;
+    width: fit-content;
+}
 
 .button:hover{
     border: 2px solid black;
@@ -340,6 +346,16 @@ input:checked + .disabledSlider:before {
         right: 10px;
     }
 
+    #exitRouting{
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        padding: 30px;
+        background-color: rgba(79, 93, 117, 0.4);
+        backdrop-filter: blur(4px);
+        z-index: 500;
+    }
+
     #rooMap{
         position: absolute;
         left: 20px;
@@ -398,6 +414,17 @@ input:checked + .disabledSlider:before {
         background-color: rgba(79, 93, 117, 0.4);
         backdrop-filter: blur(4px);
     }
+
+    #exitRouting{
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        padding: 30px;
+        background-color: rgba(79, 93, 117, 0.4);
+        backdrop-filter: blur(4px);
+        z-index: 500;
+    }
+
     #closeFilters{
         display: none;
     }

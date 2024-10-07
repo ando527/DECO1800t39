@@ -12,6 +12,7 @@ var userX;
 var userY;
 var distanceFilter;
 var locationLayer;
+var routingLayer;
 var locationRadius;
 var priceFilter;
 var timeFilter;
@@ -21,6 +22,7 @@ var shoesUrl;
 var topUrl;
 var hatUrl;
 var rooParkButton;
+var route;
 
 var mapBoxKey = "pk.eyJ1IjoiYW5kbzUyNyIsImEiOiJjbTFwbmJyaXEwNmIwMm5xMnFoOGd5dDdrIn0.3EvqnTYY5gIlOKehtLG9xQ";
 var bestSpot;
@@ -53,6 +55,7 @@ $( document ).ready(function() {
     markerLayer = L.layerGroup().addTo(map);
     disabilityLayer = L.layerGroup().addTo(map);
     locationLayer = L.layerGroup().addTo(map);
+    routingLayer = L.layerGroup().addTo(map);;
     loadingFilterElement = document.querySelector('#loadingFilter');
     //getParks();
 
@@ -262,13 +265,15 @@ function iterateRecordsParksFiltered() {
 											+ "Cap: $" + truncatePrices(recordValue["max_cap_chg"]) + "<br />" 
 											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
 											+ "Distance from you: " + distTemp + "km"
-                                            + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>";
+                                            + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>"
+                                            + "<br /><br /><div class=\"button small\" onclick=\"navigateSelected(" + recordValue["meter_no"] + ")\">Quick Navigate</div>";
 						} else {
 							var popupText = "Meter No. " + recordValue["meter_no"] + "<br />" 
 											+ "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
 											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
 											+ "Distance from you: " + distTemp + "km"
-                                            + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>";
+                                            + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>"
+                                            + "<br /><br /><div class=\"button small\" onclick=\"navigateSelected(" + recordValue["meter_no"] + ")\">Quick Navigate</div>";
 						}
                         marker.bindPopup(popupText).openPopup();
                         if (bestDistance == 0){
@@ -301,7 +306,8 @@ function iterateDisabledParksFiltered() {
                                 + "Parking Limit: " + recordValue["parking_limit"] + "<br />" 
                                 + "Location: " + recordValue["objectid"] + " " + recordValue["street"].toLowerCase() + "<br />" 
                                 + "Distance from you: " + howFar(recordLatitude, recordLongitude) +  "km"
-                                + "<br /><br /><a class=\"button small\" href=\"parking.html#d" + recordValue["zone_id"] + "\">Park Details</a>";
+                                + "<br /><br /><a class=\"button small\" href=\"parking.html#d" + recordValue["zone_id"] + "\">Park Details</a>"
+                                + "<br /><br /><div class=\"button small\" onclick=\"navigateSelected(" + recordValue["zone_id"] + ")\">Quick Navigate</div>";
                 markerD.bindPopup(popupTextD).openPopup();
             }
         }
@@ -327,12 +333,20 @@ function truncatePrices(price) {
     return price;
   }
 
-  function navigateClosest(){
+function navigateClosest(){
     var closestPark = allParks.filter(obj => {
-        return obj.meter_no.toString() === bestSpot
+        return obj.meter_no.toString() == bestSpot
       })
       if (closestPark){
-      L.Routing.control({
+        //hide sidebar
+        document.querySelector("#sidebar").style.display = "none";
+        //hide radius
+        map.removeLayer(locationLayer);
+        //hide markers
+        map.removeLayer(markerLayer);
+        //show exit button
+        document.querySelector("#exitRouting").style.display = "block";
+        route = L.Routing.control({
             waypoints: [
                 L.latLng(userX, userY),
                 L.latLng(closestPark[0].latitude, closestPark[0].longitude)
@@ -340,5 +354,41 @@ function truncatePrices(price) {
             router: L.Routing.mapbox(mapBoxKey)
         }).addTo(map);
     }
-  }
+}
 
+function navigateSelected(meter_no_selected){
+    console.log(meter_no_selected);
+    var selectedPark = allParks.filter(obj => {
+        return obj.meter_no.toString() == meter_no_selected
+      })
+      if (selectedPark){
+        //hide sidebar
+        document.querySelector("#sidebar").style.display = "none";
+        //hide radius
+        map.removeLayer(locationLayer);
+        //hide markers
+        map.removeLayer(markerLayer);
+        //show exit button
+        document.querySelector("#exitRouting").style.display = "block";
+        route = L.Routing.control({
+            waypoints: [
+                L.latLng(userX, userY),
+                L.latLng(selectedPark[0].latitude, selectedPark[0].longitude)
+            ],
+            router: L.Routing.mapbox(mapBoxKey)
+        }).addTo(map);
+    }
+}
+
+function exitNavigation(){
+    //show sidebar
+    document.querySelector("#sidebar").style.display = "flex";
+    //show radius
+    map.addLayer(locationLayer);
+    //show markers
+    map.addLayer(markerLayer);
+    //hide exit button
+    document.querySelector("#exitRouting").style.display = "none";
+    //delete route
+    map.removeControl(route);
+}
