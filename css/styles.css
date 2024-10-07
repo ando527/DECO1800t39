@@ -115,12 +115,6 @@ a:hover{
     border: 2px solid black;
 }
 
-.small{
-    padding: 2px 4px 2px 4px;
-    font-size: 1em;
-    color: black!important;
-}
-
 .slider{
     -webkit-appearance: none;
     appearance: none;
@@ -480,4 +474,51 @@ input:checked + .disabledSlider:before {
     }
     
 
+}
+
+#parkingInfo {
+    display: flex;
+    justify-content: space-evenly;
+    align-items:center;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 5%;
+}
+
+#parkingMap {
+    width: 60%;
+    height: 75%;
+    border-radius: 10px;
+}
+
+#infoHolder {
+    background-color: var(--header);
+    height: 40%;
+    width: 35%;
+    color: white;
+    font-family: "Archivo Black";
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#infoHolder h2 {
+    text-align: left;
+    margin-top: 5%;
+}
+
+#infoHolder h4, img {
+    margin-left: 10px;
+    align-self: baseline;
+}
+
+#navigate {
+    background-color: var(--accent1);
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
 }
