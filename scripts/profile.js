@@ -22,10 +22,7 @@ $( document ).ready(function() {
     profileName = localStorage.getItem("name");
     parkingPriority = localStorage.getItem("parkingPriority");
     distancePriority = localStorage.getItem("distancePriority");
-
-    if (address){
-        addressBox.value = address;
-    }
+  
     if (parkingPriority){
         parkingCheck.checked = parkingPriority == 'true';
 
@@ -36,6 +33,8 @@ $( document ).ready(function() {
     if (profileName){
         nameText.innerHTML = profileName;
         nameBox.value = profileName;
+    } else {
+        nameBox.placeholder = 'Enter a Name';
     }
     if (savedProfileImage){
         profilePic.src = savedProfileImage;
@@ -75,7 +74,14 @@ function addressAutocomplete(containerElement, callback, options = {}) {
     // Create the input element
     const inputElement = document.createElement('input');
     inputElement.setAttribute('type', 'text');
-    inputElement.setAttribute('placeholder', options.placeholder || 'Enter an address');
+
+    window.addressBox = inputElement;
+
+    if (address == undefined || !address || address == 'undefined'){
+        inputElement.setAttribute('placeholder', options.placeholder || 'Enter an address');
+    } else {
+        inputElement.setAttribute('value', address);
+    }
     containerElement.appendChild(inputElement);
   
     let currentPromiseReject;
