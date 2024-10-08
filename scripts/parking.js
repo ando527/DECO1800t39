@@ -6,6 +6,7 @@ var parkingDistance;
 var markerLayer;
 var currentOffset = 0;
 var disablityOffset = 0;
+var occupancyOffset = 0;
 var hash;
 var park;
 var userX;
@@ -123,5 +124,34 @@ function getDisabled(){
         })
     } else {
         allDisabledParks = JSON.parse(disabilityTest);
+    }
+}
+
+function getBusyTimes() {
+    var data = {
+        resource_id: "parking-occupancy-forecasting"
+    };
+    var busyTest = localStorage.getItem("occupancyForecast");
+    if (!busyTest){
+        busyTest = [];
+        $.ajax({
+            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/parking-occupancy-forecasting/records?limit=100&offset=" + occupancyOffset,
+            data: data,
+            dataType: 'jsonp',
+            cache: true,
+            success: function(data) {
+                numberofOccupancies = data.total_count;
+                occupancyTime = busyTest.concat(data.results)
+                occupancyOffset += 100;
+
+                if (occupancyOffset < numberofOccupancies) {
+                    getBusyTimes()
+                } else {
+                    localStorage.setItem("occupancyForecase", JSON.stringify(occupancyTime))
+                }
+            }
+        })
+    } else {
+        occupancyTime = JSON.parse(busyTest)
     }
 }
