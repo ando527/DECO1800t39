@@ -34,7 +34,7 @@ $(document).ready(function () {
             document.querySelector("#parkName").innerHTML = park[0]["loc_desc"];
             document.querySelector("#maxPark").innerHTML = park[0]["max_stay_hrs"] + " hrs";
             document.querySelector("#parkCost").innerHTML = "$" + park[0]["tar_rate_weekday"] + "/hr";
-            parkingMap = L.map('parkingMap').setView([lat, long], 13);
+            parkingMap = L.map('parkingMap').setView([lat, long], 15);
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -147,7 +147,6 @@ function getBusyTimes() {
             dataType: 'jsonp',
             cache: true,
             success: function (data) {
-                    console.log(data)
                     displayOccupancy(data);
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -158,21 +157,43 @@ function getBusyTimes() {
     }
 
 function displayOccupancy(occupancyData) {
-    const currentDate = new Date();
-    const currentHour = currentDate.getHours();
-    const formattedDate = currentDate.toISOString().split('T')[0];
+    var currentDate = new Date();
+    var currentHour = currentDate.getHours();
 
-    console.log("occupancyTime:", occupancyData);
+    var start = currentHour - 4;
+    var end = currentHour + 4
 
-    const occupancyPrediction = occupancyData.results.find(item => 
-        item.hour === currentHour
-    );
+    var filteredData = occupancyData.results.filter(item => item.hour >= start && item.hour <= end).sort((a, b) => a.hour - b.hour); 
 
-    if (occupancyPrediction) {
-        document.querySelector("#popTimes").innerHTML = `
-        <p>Occupancy Prediction for ${currentHour}:00: ${occupancyPrediction.occupancy_pred}</p>
-        `;
-    } else {
-        document.querySelector("#popTimes").innerHTML = "<p>No data found for this hour.</p>";
-    }
+    const graphContainter = document.querySelector("#popTimes");
+    graphContainter.innerHTML = "";
+
+    filteredData.forEach(item => {
+        
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("bar-wrapper");
+        
+        const occupancyLabel = document.createElement("span");
+        occupancyLabel.textContent = item.occupancy_pred;
+        occupancyLabel.classList.add("occupancy-label");
+        
+        const bar = document.createElement("div");
+        bar.classList.add("bar");
+        bar.style.height = `${item.occupancy_pred * 3}vh`;
+        bar.style.width = "20px";
+
+        if (item.hour == currentHour) {
+            bar.classList.add("current-hour")
+        }
+
+        const hourLabel = document.createElement("span");
+        hourLabel.classList.add("hour-label");
+        hourLabel.textContent = `${item.hour}`;
+
+        wrapper.appendChild(occupancyLabel);
+        wrapper.appendChild(bar);
+        wrapper.appendChild(hourLabel);
+
+        graphContainter.appendChild(wrapper);
+    })
 }
