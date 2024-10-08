@@ -1,17 +1,16 @@
 var parkingMap;
-var parkingLocation;
-var parkingName;
-var parkingPrice;
-var parkingDistance;
 var markerLayer;
+var locationLayer;
+var occupancyTime = [];
+var allParks = [];
+var allDisabledParks = [];
 var currentOffset = 0;
-var disablityOffset = 0;
+var disabilityOffset = 0;
 var occupancyOffset = 0;
 var hash;
-var park;
+var park = [];
 var userX;
 var userY;
-var locationLayer;
 
 const customIcon = L.icon({
     iconUrl: 'images/location.png',
@@ -20,26 +19,20 @@ const customIcon = L.icon({
     popupAnchor: [0, 0]
 });
 
-$( document ).ready(function() {
+$(document).ready(function () {
+    getParks();
+    getDisabled();
+    getBusyTimes();
 
-
-    
-    
-
-    
-      getParks();
-      getDisabled();
-
-    if(window.location.hash) {
+    if (window.location.hash) {
         hash = window.location.hash.substring(1);
-        park = allParks.filter(obj => {
-            return obj.meter_no.toString() == hash
-          })
-          if (park){
+        park = allParks.filter(obj => obj.meter_no.toString() === hash);
+        
+        if (park.length) {
             var lat = park[0]["latitude"];
             var long = park[0]["longitude"];
-            
-            document.querySelector("#maxPark").innerHTML = park[0]["max_stay_hrs"] + "hrs";
+            document.querySelector("#parkName").innerHTML = park[0]["loc_desc"];
+            document.querySelector("#maxPark").innerHTML = park[0]["max_stay_hrs"] + " hrs";
             document.querySelector("#parkCost").innerHTML = "$" + park[0]["tar_rate_weekday"] + "/hr";
             parkingMap = L.map('parkingMap').setView([lat, long], 13);
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -49,109 +42,137 @@ $( document ).ready(function() {
 
             markerLayer = L.layerGroup().addTo(parkingMap);
             locationLayer = L.layerGroup().addTo(parkingMap);
-            L.marker([park[0]["latitude"], park[0]["longitude"]]).addTo(markerLayer); 
+            L.marker([lat, long]).addTo(markerLayer);
+            
             navigator.geolocation.getCurrentPosition((position) => {
                 userX = position.coords.latitude;
                 userY = position.coords.longitude;
-                L.marker([position.coords.latitude, position.coords.longitude], { icon: customIcon }).addTo(locationLayer);
-                if (userX && userY){
-                    document.querySelector("#distanceFromYou").innerHTML = "Distance From You:" + howFar(park[0]["latitude"], park[0]["longitude"]) + "kms";
+                L.marker([userX, userY], { icon: customIcon }).addTo(locationLayer);
+                if (userX && userY) {
+                    document.querySelector("#distanceFromYou").innerHTML = "Distance From You: " + howFar(lat, long) + " kms";
                 }
             });
+        } else {
+            alert("No park found here");
         }
-      } else {
+    } else {
         alert("No park found here");
-      }
-
+    }
 });
 
-function howFar(pointX, pointY){
-    return (111 * Math.sqrt((pointX-userX)*(pointX-userX)+(pointY-userY)*(pointY-userY))).toFixed(2);
+function howFar(pointX, pointY) {
+    return (111 * Math.sqrt((pointX - userX) * (pointX - userX) + (pointY - userY) * (pointY - userY))).toFixed(2);
 }
 
-function getParks(){
-    var data = {
-        resource_id: "brisbane-parking-meters",
-    };
+function getParks() {
+    var data = { resource_id: "brisbane-parking-meters" };
     var allParksTest = localStorage.getItem("allParksLocal");
-    if (!allParksTest){
-        allParksTest = [];
+    
+    if (!allParksTest) {
         $.ajax({
             url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/brisbane-parking-meters/records?limit=100&offset=" + currentOffset,
             data: data,
-            dataType: "jsonp", 
+            dataType: "jsonp",
             cache: true,
-            success: function(data) {
-                numberOfParks = data.total_count;
+            success: function (data) {
+                var numberOfParks = data.total_count;
                 allParks = allParks.concat(data.results);
                 currentOffset += 100;
-                
-                if (currentOffset < numberOfParks){
+
+                if (currentOffset < numberOfParks) {
                     getParks();
                 } else {
-                    localStorage.setItem("allParksLocal",  JSON.stringify(allParks));
+                    localStorage.setItem("allParksLocal", JSON.stringify(allParks));
                 }
             }
         });
-    } else{
+    } else {
         allParks = JSON.parse(allParksTest);
     }
 }
 
-function getDisabled(){
-    var data = {
-        resource_id: "disability-permit-parking-locations",
-    };
+function getDisabled() {
+    var data = { resource_id: "disability-permit-parking-locations" };
     var disabilityTest = localStorage.getItem("disabilityParks");
-    if (!disabilityTest){
-        disabilityTest = [];
+
+    if (!disabilityTest) {
         $.ajax({
-            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + disablityOffset,
+            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + disabilityOffset,
             data: data,
             dataType: 'jsonp',
             cache: true,
-            success: function(data) {
-                numberOfDisabledParks = data.total_count;
+            success: function (data) {
+                var numberOfDisabledParks = data.total_count;
                 allDisabledParks = allDisabledParks.concat(data.results);
-                disablityOffset += 100;
+                disabilityOffset += 100;
 
-                if (disablityOffset < numberOfDisabledParks){
-                    getDisabled(); 
+                if (disabilityOffset < numberOfDisabledParks) {
+                    getDisabled();
                 } else {
                     localStorage.setItem("disabilityParks", JSON.stringify(allDisabledParks));
                 }
             }
-        })
+        });
     } else {
         allDisabledParks = JSON.parse(disabilityTest);
     }
 }
 
 function getBusyTimes() {
+    hash = window.location.hash.substring(1);
+    park = allParks.filter(obj => obj.meter_no.toString() === hash);
+    if (park.length === 0) {
+        console.error("No park data available to fetch busy times.");
+        document.querySelector("#popTimes").innerHTML = "<p>No park data available.</p>";
+        return;
+    }
+
+    const mobileZone = park[0]["mobile_zone"];
+    const currentDate = new Date();
+    const currentHour = currentDate.getHours();
+    const formattedDate = currentDate.toISOString().split('T')[0];
+
     var data = {
-        resource_id: "parking-occupancy-forecasting"
+        resource_id: "parking-occupancy-forecasting",
+        filters: JSON.stringify({
+            mobile_zone: mobileZone,
+            hour: currentHour,
+            date: formattedDate
+        }),
     };
-    var busyTest = localStorage.getItem("occupancyForecast");
-    if (!busyTest){
-        busyTest = [];
+
         $.ajax({
-            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/parking-occupancy-forecasting/records?limit=100&offset=" + occupancyOffset,
+            url: `https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/parking-occupancy-forecasting/records?where=date%20%3D%20date'${formattedDate}'%20and%20mobile_zone%20%3D%20${mobileZone}&limit=24`,
             data: data,
             dataType: 'jsonp',
             cache: true,
-            success: function(data) {
-                numberofOccupancies = data.total_count;
-                occupancyTime = busyTest.concat(data.results)
-                occupancyOffset += 100;
-
-                if (occupancyOffset < numberofOccupancies) {
-                    getBusyTimes()
-                } else {
-                    localStorage.setItem("occupancyForecase", JSON.stringify(occupancyTime))
-                }
+            success: function (data) {
+                    console.log(data)
+                    displayOccupancy(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching data: ", textStatus, errorThrown);
+                document.querySelector("#popTimes").innerHTML = "<p>Error fetching data.</p>";
             }
-        })
+        });
+    }
+
+function displayOccupancy(occupancyData) {
+    const currentDate = new Date();
+    const currentHour = currentDate.getHours();
+    const formattedDate = currentDate.toISOString().split('T')[0];
+
+    console.log("occupancyTime:", occupancyData);
+
+    const occupancyPrediction = occupancyData.results.find(item => 
+        item.hour === currentHour
+    );
+
+    if (occupancyPrediction) {
+        document.querySelector("#popTimes").innerHTML = `
+        <p>Occupancy Prediction for ${currentHour}:00: ${occupancyPrediction.occupancy_pred}</p>
+        `;
     } else {
-        occupancyTime = JSON.parse(busyTest)
+        document.querySelector("#popTimes").innerHTML = "<p>No data found for this hour.</p>";
     }
 }
