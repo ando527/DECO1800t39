@@ -34,7 +34,7 @@ $(document).ready(function () {
             document.querySelector("#parkName").innerHTML = park[0]["loc_desc"];
             document.querySelector("#maxPark").innerHTML = park[0]["max_stay_hrs"] + " hrs";
             document.querySelector("#parkCost").innerHTML = "$" + park[0]["tar_rate_weekday"] + "/hr";
-            parkingMap = L.map('parkingMap').setView([lat, long], 15);
+            parkingMap = L.map('parkingMap').setView([lat, long], 16);
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -168,8 +168,13 @@ function displayOccupancy(occupancyData) {
     const graphContainter = document.querySelector("#popTimes");
     graphContainter.innerHTML = "";
 
+    function formatHour(hour) {
+        const period = hour >= 12? 'PM' : 'AM';
+        const hour12 = hour % 12 || 12;
+        return `${hour12}${period}`;
+    }
+
     filteredData.forEach(item => {
-        
         const wrapper = document.createElement("div");
         wrapper.classList.add("bar-wrapper");
         
@@ -188,7 +193,7 @@ function displayOccupancy(occupancyData) {
 
         const hourLabel = document.createElement("span");
         hourLabel.classList.add("hour-label");
-        hourLabel.textContent = `${item.hour}`;
+        hourLabel.textContent = formatHour(item.hour);
 
         wrapper.appendChild(occupancyLabel);
         wrapper.appendChild(bar);
