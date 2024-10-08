@@ -531,13 +531,13 @@ input:checked + .disabledSlider:before {
     align-items: center;
 }
 
-#infoHolder h2 {
+#infoHolder p {
     text-align: left;
     margin-top: 5%;
+    font-family: "Fira Mono";
 }
 
-#infoHolder h4, img {
-    margin-left: 10px;
+#infoHolder p, img {
     align-self: baseline;
 }
 
