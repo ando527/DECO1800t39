@@ -4,7 +4,7 @@ var numberOfParks = 200; //initial high value so the code runs the first fetch
 var numberOfDisabledParks = 200;
 var keepPulling = true;
 var currentOffset = 0;
-var disablityOffset = 0;
+var disabilityOffset = 0;
 var map;
 var markerLayer;
 var disabilityLayer;
@@ -210,16 +210,16 @@ function getDisabled(){
     if (!disabilityTest){
         disabilityTest = [];
         $.ajax({
-            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + disablityOffset,
+            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + disabilityOffset,
             data: data,
             dataType: 'jsonp',
             cache: true,
             success: function(data) {
                 numberOfDisabledParks = data.total_count;
                 allDisabledParks = allDisabledParks.concat(data.results);
-                disablityOffset += 100;
+                disabilityOffset += 100;
 
-                if (disablityOffset < numberOfDisabledParks){
+                if (disabilityOffset < numberOfDisabledParks){
                     getDisabled(); 
                 } else {
                     loadNewMarkers();

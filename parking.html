@@ -39,20 +39,19 @@
                 <div id="parkingMap"></div>
                 <div id="parkingLocation"></div>
             <div id="infoHolder">
-                <h2>Parking Spot Name</h2>
-                <h4>Maximum Parking Time:<span id="maxPark"></span></h4>
-                <h4>Popular Times:<span id="popTimes"></span></h4>
-                <img src="images/favicon.png"> <!-- Placeholder image -->
-                <h4>Parking Cost:<span id="parkCost"></span></h4>
-                <h4><span id="distanceFromYou"></span></h4>
-                <a class="button">Navigate!</a>
+                <h2><span id="parkName"></span></h2>
+                <p>Maximum Parking Time: <span id="maxPark"></span></p>
+                <p>No. of Parking Spots Estimated to be Available: <span id="popTimes"></span></p>
+                <p>Parking Cost: <span id="parkCost"></span></p>
+                <p><span id="distanceFromYou"></span></p>
+                <a class="button" id="navigate">Navigate!</a>
             </div>
         </div>
     </body>
     <style>
         h4{
             span{
-                font-weight: 400;
+                font-weight: 200;
             }
         }
     </style>

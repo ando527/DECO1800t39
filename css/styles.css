@@ -465,6 +465,8 @@ input:checked + .disabledSlider:before {
         object-fit: cover;
         border-radius: 50%;
         box-shadow: rgba(17, 12, 46, 0.15) 0px 2px 10px 0px;
+        margin-left: auto;
+        margin-right: auto;
     }
     #infoBox{
         width: 50%;
@@ -525,26 +527,62 @@ input:checked + .disabledSlider:before {
     color: white;
     font-family: "Archivo Black";
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
-#infoHolder h2 {
+#infoHolder p {
     text-align: left;
     margin-top: 5%;
+    font-family: "Fira Mono";
 }
 
-#infoHolder h4, img {
-    margin-left: 10px;
+#infoHolder p, img {
     align-self: baseline;
 }
 
 #navigate {
     background-color: var(--accent1);
     text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     padding: 10px;
     border-radius: 10px;
-    max-width: 70%;
+    max-width: 50%;
+}
+
+#popTimes {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.occupancy-label {
+    font-size: 0.8em;
+    margin-bottom: 4px; 
+    color: #FFFFFF;
+}
+
+.bar {
+    background-color: #8cb3d9;
+    display: inline-block;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.current-hour {
+    background-color: var(--accent1);
+}
+
+.hour-label {
+    font-size: 0.8em;
+    margin-top: 4px;
+    color: #FFFFFF;
 }
