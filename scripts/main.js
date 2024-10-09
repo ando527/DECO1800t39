@@ -191,14 +191,12 @@ function getParks(){
                 } else {
                     loadNewMarkers(); 
                     localStorage.setItem("allParksLocal",  JSON.stringify(allParks));
-
                 }
             }
         });
     } else{
         allParks = JSON.parse(allParksTest);
         loadNewMarkers(); 
-        //console.log("SAVEDEMMMMM");
     }
 }
 
@@ -254,9 +252,9 @@ function iterateRecordsParksFiltered() {
         var recordLongitude = recordValue["longitude"];
         var distTemp;
         if (recordLatitude && recordLongitude) {
-            distTemp = howFar(recordLatitude, recordLongitude);
             if(parseInt(recordValue["max_stay_hrs"]) >= timeFilter){
                 if(parseFloat(recordValue["tar_rate_weekday"]) <= priceFilter){
+					distTemp = howFar(recordLatitude, recordLongitude);
                     if (withinRange(recordLatitude, recordLongitude)){
                         var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
 						if (recordValue["max_cap_chg"] != null){

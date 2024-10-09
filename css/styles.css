@@ -183,6 +183,7 @@ a:hover{
     padding: 0px;
     margin: 0px;
     z-index: 2;
+	width: 300px;
 }
 
 .accessory{
