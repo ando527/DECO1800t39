@@ -70,6 +70,11 @@ function updateAddress(){
     nameText.innerHTML = nameBox.value;
 }
 
+// Code adapted from Geoapify Autocomplete tutorial
+// URL: https://apidocs.geoapify.com/samples/autocomplete/autocomplete-tutorial/
+// Generative AI ChatGPT was used for debugging issues related to the textbox not appearing
+// URL: https://chatgpt.com/
+
 function addressAutocomplete(containerElement, callback, options = {}) {
     // Create the input element
     const inputElement = document.createElement('input');

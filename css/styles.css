@@ -294,7 +294,9 @@ input:checked + .disabledSlider:before {
     font-family: "Fira Mono";
 }
 
-/* Autocomplete container should have relative positioning */
+/* Style for Autocomplete dropdown from Geoapify Autocomplete tutorial */
+/* URL: https://apidocs.geoapify.com/samples/autocomplete/autocomplete-tutorial/ */
+
 .autocomplete-container {
     position: relative;
     width: 300px;
@@ -308,7 +310,6 @@ input:checked + .disabledSlider:before {
     outline: none;
   }
   
-  /* Dropdown styling */
   .autocomplete-items {
     position: absolute;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -330,12 +331,12 @@ input:checked + .disabledSlider:before {
     background-color: rgba(0, 0, 0, 0.1);
   }
   
-  /* Highlight the active item during keyboard navigation */
+  
   .autocomplete-items .autocomplete-active {
     background-color: rgba(0, 0, 0, 0.1);
   }
   
-  /* Clear button styling */
+  
   .clear-button {
     color: rgba(0, 0, 0, 0.4);
     cursor: pointer;
