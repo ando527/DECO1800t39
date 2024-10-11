@@ -4,13 +4,16 @@ var numberOfParks = 200; //initial high value so the code runs the first fetch
 var numberOfDisabledParks = 200;
 var keepPulling = true;
 var currentOffset = 0;
-var disablityOffset = 0;
+var disabilityOffset = 0;
 var map;
 var markerLayer;
 var disabilityLayer;
 var userX;
 var userY;
 var distanceFilter;
+var locationLayer;
+var routingLayer;
+var locationRadius;
 var priceFilter;
 var timeFilter;
 var loadingFilterElement;
@@ -18,7 +21,12 @@ var showDisabled = false;
 var shoesUrl;
 var topUrl;
 var hatUrl;
+var rooParkButton;
+var route;
 
+var mapBoxKey = "pk.eyJ1IjoiYW5kbzUyNyIsImEiOiJjbTFwbmJyaXEwNmIwMm5xMnFoOGd5dDdrIn0.3EvqnTYY5gIlOKehtLG9xQ";
+var bestSpot;
+var bestDistance = 0;
 
 
 const customIcon = L.icon({
@@ -27,6 +35,8 @@ const customIcon = L.icon({
     iconAnchor: [7, 7],
     popupAnchor: [0, 0]
 });
+
+
 
 const dIcon = L.icon({
     iconUrl: 'css/images/disabled-icon.png',
@@ -45,8 +55,11 @@ $( document ).ready(function() {
     markerLayer = L.layerGroup().addTo(map);
     disabilityLayer = L.layerGroup().addTo(map);
     locationLayer = L.layerGroup().addTo(map);
+    routingLayer = L.layerGroup().addTo(map);;
     loadingFilterElement = document.querySelector('#loadingFilter');
     //getParks();
+
+    
 
     const distanceValue = document.querySelector("#distanceValue");
     const distanceSlider = document.querySelector("#distance");
@@ -55,10 +68,12 @@ $( document ).ready(function() {
     const disabledCheckBox = document.querySelector("#disabledCheck");
     const filterButton = document.querySelector("#filterButton");
     const closeFilter = document.querySelector("#closeFilters");
+    rooParkButton = document.querySelector("#rooPark");
     distanceValue.textContent = distanceSlider.value + "km";
     distanceFilter = parseInt(distanceSlider.value);
     distanceSlider.addEventListener("change", (event) => {
         distanceFilter = parseInt(distanceSlider.value);
+        locationRadius.setRadius (distanceFilter*1000);
         distanceValue.textContent = distanceSlider.value + "km";
         markerLayer.clearLayers();
         disabilityLayer.clearLayers();
@@ -104,6 +119,10 @@ $( document ).ready(function() {
         filterButton.style.display="none";
     });
 
+    rooParkButton.addEventListener("click", (event) => {
+        navigateClosest();
+    });
+
     closeFilter.addEventListener("click", (event) => {
         document.querySelector("#sidebar").style.display="none";
         filterButton.style.display="flex";
@@ -125,6 +144,10 @@ $( document ).ready(function() {
         var marker = L.marker([position.coords.latitude, position.coords.longitude], { icon: customIcon }).addTo(locationLayer);
         userX = position.coords.latitude;
         userY = position.coords.longitude;
+        locationRadius = L.circle([userX, userY], {
+            radius: distanceFilter*1000,
+            color: '#4f5d75',
+            fillOpacity: 0.1}).addTo(locationLayer);
         getParks();
         getDisabled();
       });
@@ -168,14 +191,12 @@ function getParks(){
                 } else {
                     loadNewMarkers(); 
                     localStorage.setItem("allParksLocal",  JSON.stringify(allParks));
-
                 }
             }
         });
     } else{
         allParks = JSON.parse(allParksTest);
         loadNewMarkers(); 
-        console.log("SAVEDEMMMMM");
     }
 }
 
@@ -187,16 +208,16 @@ function getDisabled(){
     if (!disabilityTest){
         disabilityTest = [];
         $.ajax({
-            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + disablityOffset,
+            url: "https://data.brisbane.qld.gov.au/api/explore/v2.1/catalog/datasets/disability-permit-parking-locations/records?limit=100&offset=" + disabilityOffset,
             data: data,
             dataType: 'jsonp',
             cache: true,
             success: function(data) {
                 numberOfDisabledParks = data.total_count;
                 allDisabledParks = allDisabledParks.concat(data.results);
-                disablityOffset += 100;
+                disabilityOffset += 100;
 
-                if (disablityOffset < numberOfDisabledParks){
+                if (disabilityOffset < numberOfDisabledParks){
                     getDisabled(); 
                 } else {
                     loadNewMarkers();
@@ -208,7 +229,7 @@ function getDisabled(){
     } else {
         allDisabledParks = JSON.parse(disabilityTest);
         loadNewMarkers()
-        console.log("SAVE THEM AGAIN");
+        //console.log("SAVE THEM AGAIN");
     }
 }
 
@@ -225,13 +246,15 @@ function iterateRecordsParks(data) {
 }
 
 function iterateRecordsParksFiltered() { 
-    
+    bestDistance = 0;
     $.each(allParks, function(recordID, recordValue) {
         var recordLatitude = recordValue["latitude"];
         var recordLongitude = recordValue["longitude"];
+        var distTemp;
         if (recordLatitude && recordLongitude) {
             if(parseInt(recordValue["max_stay_hrs"]) >= timeFilter){
                 if(parseFloat(recordValue["tar_rate_weekday"]) <= priceFilter){
+					distTemp = howFar(recordLatitude, recordLongitude);
                     if (withinRange(recordLatitude, recordLongitude)){
                         var marker = L.marker([recordLatitude, recordLongitude]).addTo(markerLayer); 
 						if (recordValue["max_cap_chg"] != null){
@@ -239,19 +262,34 @@ function iterateRecordsParksFiltered() {
 											+ "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
 											+ "Cap: $" + truncatePrices(recordValue["max_cap_chg"]) + "<br />" 
 											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
-											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km";
+											+ "Distance from you: " + distTemp + "km"
+                                            + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>"
+                                            + "<br /><br /><div class=\"button small\" onclick=\"navigateSelected(" + recordValue["meter_no"] + ")\">Quick Navigate</div>";
 						} else {
 							var popupText = "Meter No. " + recordValue["meter_no"] + "<br />" 
 											+ "Price/hr (weekday): $" + recordValue["tar_rate_weekday"] + "<br />" 
 											+ "Max Stay: " + recordValue["max_stay_hrs"] + "hrs<br />" 
-											+ "Distance from you: " + howFar(recordLatitude, recordLongitude) + "km";
+											+ "Distance from you: " + distTemp + "km"
+                                            + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>"
+                                            + "<br /><br /><div class=\"button small\" onclick=\"navigateSelected(" + recordValue["meter_no"] + ")\">Quick Navigate</div>";
 						}
                         marker.bindPopup(popupText).openPopup();
+                        if (bestDistance == 0){
+                            bestDistance = distTemp;
+                            bestSpot = recordValue["meter_no"];
+                        } else {
+                            if (distTemp < bestDistance){
+                                bestDistance = distTemp;
+                                bestSpot = recordValue["meter_no"];
+                            }
+                        }
                     }
                 }
             }
         }
+        
     });
+
 }
 
 function iterateDisabledParksFiltered() { 
@@ -265,7 +303,9 @@ function iterateDisabledParksFiltered() {
                 var popupTextD = "Zone id: " + recordValue["zone_id"] + "<br />" 
                                 + "Parking Limit: " + recordValue["parking_limit"] + "<br />" 
                                 + "Location: " + recordValue["objectid"] + " " + recordValue["street"].toLowerCase() + "<br />" 
-                                + "Distance from you: " + howFar(recordLatitude, recordLongitude) +  "km";
+                                + "Distance from you: " + howFar(recordLatitude, recordLongitude) +  "km"
+                                + "<br /><br /><a class=\"button small\" href=\"parking.html#d" + recordValue["zone_id"] + "\">Park Details</a>"
+                                + "<br /><br /><div class=\"button small\" onclick=\"navigateSelected(" + recordValue["zone_id"] + ")\">Quick Navigate</div>";
                 markerD.bindPopup(popupTextD).openPopup();
             }
         }
@@ -290,3 +330,63 @@ function truncatePrices(price) {
     }
     return price;
   }
+
+function navigateClosest(){
+    var closestPark = allParks.filter(obj => {
+        return obj.meter_no.toString() == bestSpot
+      })
+      if (closestPark){
+        //hide sidebar
+        document.querySelector("#sidebar").style.display = "none";
+        //hide radius
+        map.removeLayer(locationLayer);
+        //hide markers
+        map.removeLayer(markerLayer);
+        //show exit button
+        document.querySelector("#exitRouting").style.display = "block";
+        route = L.Routing.control({
+            waypoints: [
+                L.latLng(userX, userY),
+                L.latLng(closestPark[0].latitude, closestPark[0].longitude)
+            ],
+            router: L.Routing.mapbox(mapBoxKey)
+        }).addTo(map);
+    }
+}
+
+function navigateSelected(meter_no_selected){
+    console.log(meter_no_selected);
+    var selectedPark = allParks.filter(obj => {
+        return obj.meter_no.toString() == meter_no_selected
+      })
+      if (selectedPark){
+        //hide sidebar
+        document.querySelector("#sidebar").style.display = "none";
+        //hide radius
+        map.removeLayer(locationLayer);
+        //hide markers
+        map.removeLayer(markerLayer);
+        //show exit button
+        document.querySelector("#exitRouting").style.display = "block";
+        route = L.Routing.control({
+            waypoints: [
+                L.latLng(userX, userY),
+                L.latLng(selectedPark[0].latitude, selectedPark[0].longitude)
+            ],
+            router: L.Routing.mapbox(mapBoxKey)
+        }).addTo(map);
+    }
+}
+
+function exitNavigation(){
+    //show sidebar
+    document.querySelector("#sidebar").style.display = "flex";
+    //show radius
+    map.addLayer(locationLayer);
+    //show markers
+    map.addLayer(markerLayer);
+    //hide exit button
+    document.querySelector("#exitRouting").style.display = "none";
+    //delete route
+    map.removeControl(route);
+}

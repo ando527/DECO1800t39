@@ -111,6 +111,12 @@ a:hover{
     border: 2px solid transparent;
     transition: border 250ms;
 }
+.small{
+    padding: 2px 4px 2px 4px;
+    font-size: 1em;
+    color: black!important;
+    width: fit-content;
+}
 
 .button:hover{
     border: 2px solid black;
@@ -178,6 +184,7 @@ a:hover{
     padding: 0px;
     margin: 0px;
     z-index: 2;
+	width: 300px;
 }
 
 .accessory{
@@ -414,6 +421,16 @@ input:checked + .disabledSlider:before {
         right: 10px;
     }
 
+    #exitRouting{
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        padding: 30px;
+        background-color: rgba(79, 93, 117, 0.4);
+        backdrop-filter: blur(4px);
+        z-index: 500;
+    }
+
     #rooMap{
         position: absolute;
         left: 20px;
@@ -472,6 +489,17 @@ input:checked + .disabledSlider:before {
         background-color: rgba(79, 93, 117, 0.4);
         backdrop-filter: blur(4px);
     }
+
+    #exitRouting{
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        padding: 30px;
+        background-color: rgba(79, 93, 117, 0.4);
+        backdrop-filter: blur(4px);
+        z-index: 500;
+    }
+
     #closeFilters{
         display: none;
     }
@@ -512,6 +540,8 @@ input:checked + .disabledSlider:before {
         object-fit: cover;
         border-radius: 50%;
         box-shadow: rgba(17, 12, 46, 0.15) 0px 2px 10px 0px;
+        margin-left: auto;
+        margin-right: auto;
     }
     #infoBox{
         width: 50%;
@@ -550,3 +580,85 @@ input:checked + .disabledSlider:before {
 
 }
   
+
+#parkingInfo {
+    display: flex;
+    justify-content: space-evenly;
+    align-items:center;
+    height: 90vh;
+    width: 100%;
+    padding-top: 50px;
+}
+
+#parkingMap {
+    width: 60%;
+    height: 75%;
+    border-radius: 10px;
+}
+
+#infoHolder {
+    background-color: var(--header);
+    padding: 20px;
+    width: 35%;
+    color: white;
+    font-family: "Archivo Black";
+    border-radius: 10px;
+}
+
+#infoHolder p {
+    text-align: left;
+    margin-top: 5%;
+    font-family: "Fira Mono";
+}
+
+#infoHolder p, img {
+    align-self: baseline;
+}
+
+#navigate {
+    background-color: var(--accent1);
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 50%;
+}
+
+#popTimes {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.occupancy-label {
+    font-size: 0.8em;
+    margin-bottom: 4px; 
+    color: #FFFFFF;
+}
+
+.bar {
+    background-color: #8cb3d9;
+    display: inline-block;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.current-hour {
+    background-color: var(--accent1);
+}
+
+.hour-label {
+    font-size: 0.8em;
+    margin-top: 4px;
+    color: #FFFFFF;
+}

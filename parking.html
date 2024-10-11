@@ -5,15 +5,12 @@
         <link rel="stylesheet" href="css/styles.css" />
         <link rel="stylesheet" href="css/leaflet.css" />
         <script src="scripts/leaflet.js"></script>
-        <link rel="stylesheet" href="css/leaflet-routing-machine.css" />
-        <script src="scripts/leaflet-routing-machine.js"></script>
         <link rel="icon" type="image/png" href="images/favicon.png" />
-        <script src="scripts/main.js"></script>
+        <script src="scripts/parking.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-
     </head>
     <body>
         <div id="header">
@@ -38,38 +35,24 @@
                 </div>
             </div>
         </div>
-        <div id="map"></div>
-        <div id="loadingFilter" class="hide">loading</div>
-        <div id="filterButton"><img src="images/filter.svg" width="38px" height="28px"/></div>
-        <div id="sidebar">
-            <img src="images/cross.svg" id="closeFilters"/>
-            <h2>Find a Location!</h2>
-            <div>
-                <h3>Parking Distance:</h3>
-                <input type="range" id="distance" name="distance" min="0" max="25" class="slider" value="5"/>
-                <p id="distanceValue"></p>
-                <h3>Parking Time:</h3>
-                <input type="range" id="time" name="time" min="1" max="12" class="slider" value="10"/>
-                <p id="timeValue"></p>
-                <h3>$/hr:</h3>
-                <input type="range" id="price" name="price" min="2" max="6.15" class="slider" value="6.15" step="0.05"/>
-                <p id="priceValue"></p>
-                <h3>Show disabled:</h3>
-                <label class="disabledSwitch">
-                    <input type="checkbox" id="disabledCheck" />
-                    <span class="disabledSlider"></span>
-                </label>
+        <div id="parkingInfo">
+                <div id="parkingMap"></div>
+                <div id="parkingLocation"></div>
+            <div id="infoHolder">
+                <h2><span id="parkName"></span></h2>
+                <p>Maximum Parking Time: <span id="maxPark"></span></p>
+                <p>No. of Parking Spots Estimated to be Available: <span id="popTimes"></span></p>
+                <p>Parking Cost: <span id="parkCost"></span></p>
+                <p><span id="distanceFromYou"></span></p>
+                <a class="button" id="navigate">Navigate!</a>
             </div>
-            <div class="button" id="rooPark">RooPark!</div>
-        </div>
-        <div id="exitRouting" style="display: none;">
-            <div class="button small" onclick="exitNavigation()">Exit Routing</div>
-        </div>
-        <div id="rooMap">
-            <img src="images/kangaroo_base.png" id="baseRooMap"/>
-            <img src="images/roo_top.png" id="topRooMap"/>
-            <img src="images/roo_mid.png" id="midRooMap" />
-            <img src="images/roo_bottom.png" id="bottomRooMap" />
         </div>
     </body>
-</html>
+    <style>
+        h4{
+            span{
+                font-weight: 200;
+            }
+        }
+    </style>
+    </html>
