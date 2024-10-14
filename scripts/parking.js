@@ -22,39 +22,73 @@ const customIcon = L.icon({
 $(document).ready(function () {
     getParks();
     getDisabled();
-    getBusyTimes();
+    
 
     if (window.location.hash) {
         hash = window.location.hash.substring(1);
-        park = allParks.filter(obj => obj.meter_no.toString() === hash);
-        
-        if (park.length) {
-            var lat = park[0]["latitude"];
-            var long = park[0]["longitude"];
-            document.querySelector("#parkName").innerHTML = park[0]["loc_desc"];
-            document.querySelector("#maxPark").innerHTML = park[0]["max_stay_hrs"] + " hrs";
-            document.querySelector("#parkCost").innerHTML = "$" + park[0]["tar_rate_weekday"] + "/hr";
-            parkingMap = L.map('parkingMap').setView([lat, long], 16);
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(parkingMap);
-
-            markerLayer = L.layerGroup().addTo(parkingMap);
-            locationLayer = L.layerGroup().addTo(parkingMap);
-            L.marker([lat, long]).addTo(markerLayer);
-            
-            navigator.geolocation.getCurrentPosition((position) => {
-                userX = position.coords.latitude;
-                userY = position.coords.longitude;
-                L.marker([userX, userY], { icon: customIcon }).addTo(locationLayer);
-                if (userX && userY) {
-                    document.querySelector("#distanceFromYou").innerHTML = "Distance From You: " + howFar(lat, long) + " kms";
-                }
-            });
+        if (hash.includes("d")){
+            hash = hash.replace(/d/g, "")
+            park = allDisabledParks.filter(obj => obj.zone_id.toString() === hash);
+            if (park.length) {
+                var lat = park[0]["latitude"];
+                var long = park[0]["longitude"];
+                document.querySelector("#parkName").innerHTML = park[0]["street"];
+                document.querySelector("#maxPark").innerHTML = "Unlimited";
+                document.querySelector("#parkCost").innerHTML = "$0/hr";
+                parkingMap = L.map('parkingMap').setView([lat, long], 16);
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(parkingMap);
+    
+                markerLayer = L.layerGroup().addTo(parkingMap);
+                locationLayer = L.layerGroup().addTo(parkingMap);
+                L.marker([lat, long]).addTo(markerLayer);
+                
+                navigator.geolocation.getCurrentPosition((position) => {
+                    userX = position.coords.latitude;
+                    userY = position.coords.longitude;
+                    L.marker([userX, userY], { icon: customIcon }).addTo(locationLayer);
+                    if (userX && userY) {
+                        document.querySelector("#distanceFromYou").innerHTML = "Distance From You: " + howFar(lat, long) + " kms";
+                    }
+                });
+            } else {
+                alert("No park found here");
+            }
+            document.querySelector("#popTimes").remove();
         } else {
-            alert("No park found here");
+            park = allParks.filter(obj => obj.meter_no.toString() === hash);
+            if (park.length) {
+                var lat = park[0]["latitude"];
+                var long = park[0]["longitude"];
+                document.querySelector("#parkName").innerHTML = park[0]["loc_desc"];
+                document.querySelector("#maxPark").innerHTML = park[0]["max_stay_hrs"] + " hrs";
+                document.querySelector("#parkCost").innerHTML = "$" + park[0]["tar_rate_weekday"] + "/hr";
+                parkingMap = L.map('parkingMap').setView([lat, long], 16);
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(parkingMap);
+    
+                markerLayer = L.layerGroup().addTo(parkingMap);
+                locationLayer = L.layerGroup().addTo(parkingMap);
+                L.marker([lat, long]).addTo(markerLayer);
+                
+                navigator.geolocation.getCurrentPosition((position) => {
+                    userX = position.coords.latitude;
+                    userY = position.coords.longitude;
+                    L.marker([userX, userY], { icon: customIcon }).addTo(locationLayer);
+                    if (userX && userY) {
+                        document.querySelector("#distanceFromYou").innerHTML = "Distance From You: " + howFar(lat, long) + " kms";
+                    }
+                });
+                getBusyTimes();
+            } else {
+                alert("No park found here");
+            }
         }
+        
     } else {
         alert("No park found here");
     }
