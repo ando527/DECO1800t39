@@ -1,6 +1,7 @@
 var shoesUrl;
 var topUrl;
 var hatUrl;
+var balance = 0;
 
 function loadShoe(e){
     document.querySelector("#shoesImg").src= "images/shoes/" + e.dataset.shoe + "_shoes.png";
@@ -42,7 +43,14 @@ $(document).ready(function(){
         }
     }
 
+    balance = localStorage.getItem("balance");
 
+    if (balance){
+        document.querySelector(".balance").innerHTML = balance;
+    } else {
+        balance = 0;
+        localStorage.setItem("balance", balance);
+    }
 
   });
 

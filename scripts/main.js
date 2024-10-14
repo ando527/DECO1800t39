@@ -23,6 +23,7 @@ var topUrl;
 var hatUrl;
 var rooParkButton;
 var route;
+var balance = 0;
 
 var mapBoxKey = "pk.eyJ1IjoiYW5kbzUyNyIsImEiOiJjbTFwbmJyaXEwNmIwMm5xMnFoOGd5dDdrIn0.3EvqnTYY5gIlOKehtLG9xQ";
 var bestSpot;
@@ -102,6 +103,8 @@ $( document ).ready(function() {
     shoesUrl = localStorage.getItem("shoe");
     topUrl = localStorage.getItem("top");
 
+    
+
     if (hatUrl || shoesUrl || topUrl){
         if (hatUrl){
             document.querySelector("#topRooMap").src= hatUrl;
@@ -112,6 +115,14 @@ $( document ).ready(function() {
         if (shoesUrl){
             document.querySelector("#bottomRooMap").src= shoesUrl;
         }
+    }
+
+    balance = localStorage.getItem("balance");
+
+    if (balance){
+        document.querySelector(".balance").innerHTML = balance;
+    } else {
+        localStorage.setItem("balance", balance);
     }
 
     filterButton.addEventListener("click", (event) => {
@@ -168,6 +179,18 @@ function loadNewMarkers(){
     }, 0);
 }
 
+function addToBalance(amount){
+    balance = localStorage.getItem("balance");
+    if (balance){
+        balance += amount;
+        localStorage.setItem("balance", balance);
+        document.querySelector(".balance").innerHTML = balance;
+    } else {
+        balance = 0;
+        balance += amount;
+        localStorage.setItem("balance", balance);
+    }
+}
 
 function getParks(){
     var data = {
