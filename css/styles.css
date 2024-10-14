@@ -204,8 +204,52 @@ a:hover{
     border-radius: 10px;
     cursor: pointer;
     display: flex!important;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.jacket{
+    background: url("../images/thumbs/jacket_icon.png") no-repeat center;
+    background-size: contain;
+}
+.jet{
+    background: url("../images/thumbs/jet_icon.png") no-repeat center;
+    background-size: contain;
+}
+.singlet{
+    background: url("../images/thumbs/singlet_icon.png") no-repeat center;
+    background-size: contain;
+}
+.formal{
+    background: url("../images/thumbs/shirt_icon.png") no-repeat center;
+    background-size: contain;
+}
+.tshirt{
+    background: url("../images/thumbs/tshirt_icon.png") no-repeat center;
+    background-size: contain;
+}
+.hoop{
+    background: url("../images/thumbs/hoop_icon.png") no-repeat center;
+    background-size: contain;
+}
+.diamond{
+    background: url("../images/thumbs/earring_icon.png") no-repeat center;
+    background-size: contain;
+}
+.band{
+    background: url("../images/thumbs/headband_icon.png") no-repeat center;
+    background-size: contain;
+}
+.cap{
+    background: url("../images/thumbs/cap_icon.png") no-repeat center;
+    background-size: contain;
+}
+.headphones{
+    background: url("../images/thumbs/headphone_icon.png") no-repeat center;
+    background-size: contain;
+}
+.bucket{
+    background: url("../images/thumbs/hat_icon.png") no-repeat center;
+    background-size: contain;
 }
 .redShoe, .redTop, .redBand {
     background-color: red;
