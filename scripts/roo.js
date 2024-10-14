@@ -8,8 +8,8 @@ function loadShoe(e){
 }
 
 function loadTop(e){
-    document.querySelector("#topImg").src= "images/tops/" + e.dataset.top + "_top.png";
-    localStorage.setItem("top", ("images/tops/" + e.dataset.top + "_top.png"));
+    document.querySelector("#topImg").src= "images/tops/" + e.dataset.top + ".png";
+    localStorage.setItem("top", ("images/tops/" + e.dataset.top + ".png"));
 }
 
 function loadHat(e){
@@ -41,6 +41,8 @@ $(document).ready(function(){
             document.querySelector("#shoesImg").src= shoesUrl;
         }
     }
+
+
 
   });
 
