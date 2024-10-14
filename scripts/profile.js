@@ -11,7 +11,7 @@ var nameText;
 var profilePic;
 
 $( document ).ready(function() {
-    addressBox = document.querySelector("#autocomplete-container");
+    addressBox = document.querySelector("#autocompleteContainer");
     nameBox = document.querySelector("#nameBox");
     parkingCheck = document.querySelector("#parkingCheck");
     distanceCheck = document.querySelector("#distanceCheck");
@@ -56,7 +56,7 @@ $( document ).ready(function() {
         }
     });
 
-    addressAutocomplete(document.getElementById("autocomplete-container"), (data) => {
+    addressAutocomplete(document.getElementById("autocompleteContainer"), (data) => {
         console.log('Selected option:', data);
       });
 
@@ -95,7 +95,7 @@ function addressAutocomplete(containerElement, callback, options = {}) {
   
     // Add input field clear button
     const clearButton = document.createElement('div');
-    clearButton.classList.add('clear-button');
+    clearButton.classList.add('clearButton');
     clearButton.innerHTML = '&times;';
     clearButton.addEventListener('click', () => {
       inputElement.value = '';
@@ -146,7 +146,7 @@ function addressAutocomplete(containerElement, callback, options = {}) {
         currentItems = data.features;
   
         const autocompleteItemsElement = document.createElement('div');
-        autocompleteItemsElement.setAttribute('class', 'autocomplete-items');
+        autocompleteItemsElement.setAttribute('class', 'autocompleteItems');
         containerElement.appendChild(autocompleteItemsElement);
   
         currentItems.forEach((feature, index) => {
@@ -167,7 +167,7 @@ function addressAutocomplete(containerElement, callback, options = {}) {
     });
   
     inputElement.addEventListener('keydown', function (e) {
-      const autocompleteItemsElement = containerElement.querySelector('.autocomplete-items');
+      const autocompleteItemsElement = containerElement.querySelector('.autocompleteItems');
       if (autocompleteItemsElement) {
         const itemElements = autocompleteItemsElement.getElementsByTagName('div');
         if (e.keyCode === 40) {
@@ -197,16 +197,16 @@ function addressAutocomplete(containerElement, callback, options = {}) {
       if (!items || !items.length) return;
   
       for (let i = 0; i < items.length; i++) {
-        items[i].classList.remove('autocomplete-active');
+        items[i].classList.remove('autocompleteActive');
       }
   
-      items[index].classList.add('autocomplete-active');
+      items[index].classList.add('autocompleteActive');
       inputElement.value = currentItems[index].properties.formatted;
       callback(currentItems[index]);
     }
   
     function closeDropDownList() {
-      const autocompleteItemsElement = containerElement.querySelector('.autocomplete-items');
+      const autocompleteItemsElement = containerElement.querySelector('.autocompleteItems');
       if (autocompleteItemsElement) {
         containerElement.removeChild(autocompleteItemsElement);
       }
