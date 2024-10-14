@@ -40,13 +40,13 @@
                 <div id="headBox">
                     <img src="images/profileBlank.png" id="profilePhoto"/>
                     <input type="file" id="fileInput" accept="image/*">
-                    <h2 id="profileName">John Tomy</h2>
+                    <h2 id="profileName">Johln Tomy</h2>
                 </div>
                 <div id="infoBox">
                     <h2>Home Address:</h2>
-                    <div><input type="text" id="addressBox"></input></div>
+                    <div class="autocompleteContainer" id="autocompleteContainer"></div>
                     <h2>Name:</h2>
-                    <div><input type="text" id="nameBox"></input></div>
+                    <div class="nameContainer"><input type="text" id="nameBox"></input></div>
                     <h2>Preferences:</h2>
                     <div class="toggleHolder"><input type="checkbox" name="parkingPriority" id="parkingCheck"></input><div>Prioritise Parking Price</div></div>
                     <div class="toggleHolder"><input type="checkbox" name="distancePriority" id="distanceCheck"></input><div>Prioritise Parking Distance</div></div>
@@ -54,5 +54,7 @@
                 </div>
             </div>
         </div>
+        <div class="autocompleteContainer" id="autocompleteContainer"></div>
+        <div><input type="text" id="nameBox"></input></div>
     </body>
     </html>
