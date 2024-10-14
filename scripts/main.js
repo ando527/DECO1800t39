@@ -182,6 +182,7 @@ function loadNewMarkers(){
 function addToBalance(amount){
     balance = localStorage.getItem("balance");
     if (balance){
+        balance = parseInt(balance);
         balance += amount;
         localStorage.setItem("balance", balance);
         document.querySelector(".balance").innerHTML = balance;
@@ -375,6 +376,7 @@ function navigateClosest(){
             router: L.Routing.mapbox(mapBoxKey)
         }).addTo(map);
     }
+    addToBalance(10);
 }
 
 function navigateSelected(meter_no_selected){
