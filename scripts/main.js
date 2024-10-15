@@ -401,6 +401,7 @@ function navigateSelected(meter_no_selected){
             router: L.Routing.mapbox(mapBoxKey)
         }).addTo(map);
     }
+    addToBalance(5);
 }
 
 function exitNavigation(){
