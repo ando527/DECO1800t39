@@ -297,7 +297,7 @@ function iterateRecordsParksFiltered() {
                                             + "<br /><br /><a class=\"button small\" href=\"parking.html#" + recordValue["meter_no"] + "\">Park Details</a>"
                                             + "<br /><br /><div class=\"button small\" onclick=\"navigateSelected(" + recordValue["meter_no"] + ")\">Quick Navigate</div>";
 						}
-                        marker.bindPopup(popupText).openPopup();
+                        marker.bindPopup(popupText);//.openPopup();
                         if (bestDistance == 0){
                             bestDistance = distTemp;
                             bestSpot = recordValue["meter_no"];
@@ -330,7 +330,7 @@ function iterateDisabledParksFiltered() {
                                 + "Distance from you: " + howFar(recordLatitude, recordLongitude) +  "km"
                                 + "<br /><br /><a class=\"button small\" href=\"parking.html#d" + recordValue["zone_id"] + "\">Park Details</a>"
                                 + "<br /><br /><div class=\"button small\" onclick=\"navigateSelected(" + recordValue["zone_id"] + ")\">Quick Navigate</div>";
-                markerD.bindPopup(popupTextD).openPopup();
+                markerD.bindPopup(popupTextD);//.openPopup();
             }
         }
     });
