@@ -251,21 +251,27 @@ a:hover{
     background: url("../images/thumbs/hat_icon.png") no-repeat center;
     background-size: contain;
 }
-.redShoe, .redTop, .redBand {
-    background-color: red;
+.jetShoes{
+    background: url("../images/thumbs/jetShoe_icon.png") no-repeat center;
+    background-size: contain;
 }
-.purpleShoe, .purpleTop, .purpleBand{
-    background-color: purple;
+.boots{
+    background: url("../images/thumbs/boot_icon.png") no-repeat center;
+    background-size: contain;
 }
-.greenShoe, .greenTop, .greenBand{
-    background-color: greenyellow;
+.shoes{
+    background: url("../images/thumbs/shoe_icon.png") no-repeat center;
+    background-size: contain;
 }
-.blueShoe, .blueTop, .blueHat{
-    background-color: blue;
+.slippers{
+    background: url("../images/thumbs/slipper_icon.png") no-repeat center;
+    background-size: contain;
 }
-.pinkShoe, .pinkTop, .pinkHat{
-    background-color: pink;
+.clear{
+    background: url("../images/thumbs/clear_icon.png") no-repeat center;
+    background-size: contain;
 }
+
 
 
 .indivAccessorySlider{

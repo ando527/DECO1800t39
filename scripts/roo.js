@@ -4,8 +4,8 @@ var hatUrl;
 var balance = 0;
 
 function loadShoe(e){
-    document.querySelector("#shoesImg").src= "images/shoes/" + e.dataset.shoe + "_shoes.png";
-    localStorage.setItem("shoe", ("images/shoes/" + e.dataset.shoe + "_shoes.png"));
+    document.querySelector("#shoesImg").src= "images/shoes/" + e.dataset.shoe + ".png";
+    localStorage.setItem("shoe", ("images/shoes/" + e.dataset.shoe + ".png"));
 }
 
 function loadTop(e){
