@@ -29,7 +29,7 @@ var mapBoxKey = "pk.eyJ1IjoiYW5kbzUyNyIsImEiOiJjbTFwbmJyaXEwNmIwMm5xMnFoOGd5dDdr
 var bestSpot;
 var bestDistance = 0;
 
-
+// Define map icons
 const customIcon = L.icon({
     iconUrl: 'images/location.png',
     iconSize: [15, 15],
@@ -47,21 +47,22 @@ const dIcon = L.icon({
 });
 
 $( document ).ready(function() {
-    
+
+    // Initialize map and set view
     map = L.map('map').setView([-27.47, 153.02], 13);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+
+    // Initialize layers to be added to map
     markerLayer = L.layerGroup().addTo(map);
     disabilityLayer = L.layerGroup().addTo(map);
     locationLayer = L.layerGroup().addTo(map);
     routingLayer = L.layerGroup().addTo(map);;
     loadingFilterElement = document.querySelector('#loadingFilter');
-    //getParks();
 
-    
-
+    // Setting up filter controls
     const distanceValue = document.querySelector("#distanceValue");
     const distanceSlider = document.querySelector("#distance");
     const priceSlider = document.querySelector("#price");
@@ -70,6 +71,8 @@ $( document ).ready(function() {
     const filterButton = document.querySelector("#filterButton");
     const closeFilter = document.querySelector("#closeFilters");
     rooParkButton = document.querySelector("#rooPark");
+
+    // Set distance filter
     distanceValue.textContent = distanceSlider.value + "km";
     distanceFilter = parseInt(distanceSlider.value);
     distanceSlider.addEventListener("change", (event) => {
@@ -81,6 +84,7 @@ $( document ).ready(function() {
         loadNewMarkers();
     });
 
+    // Set price filter
     priceValue.textContent = "$" + priceSlider.value;
     priceFilter = parseFloat(priceSlider.value);
     priceSlider.addEventListener("change", (event) => {
@@ -91,6 +95,7 @@ $( document ).ready(function() {
         loadNewMarkers();
     });
 
+    // Toggle for disability meters
     disabledCheckBox.addEventListener("change", (event) => {
         showDisabled = disabledCheckBox.checked;
         markerLayer.clearLayers();
@@ -99,6 +104,7 @@ $( document ).ready(function() {
 
     });
 
+    // Load roo decors from local storage
     hatUrl = localStorage.getItem("hat");
     shoesUrl = localStorage.getItem("shoe");
     topUrl = localStorage.getItem("top");
@@ -117,6 +123,7 @@ $( document ).ready(function() {
         }
     }
 
+    // Load user valance from local storage
     balance = localStorage.getItem("balance");
 
     if (balance){
@@ -125,6 +132,7 @@ $( document ).ready(function() {
         localStorage.setItem("balance", balance);
     }
 
+    // Setting up listeners for filter controls
     filterButton.addEventListener("click", (event) => {
         document.querySelector("#sidebar").style.display="flex";
         filterButton.style.display="none";
@@ -139,6 +147,7 @@ $( document ).ready(function() {
         filterButton.style.display="flex";
     });
 
+    // Time filter controls
     const timeValue = document.querySelector("#timeValue");
     const timeSlider = document.querySelector("#time");
     timeValue.textContent = timeSlider.value + "hrs";
@@ -151,6 +160,7 @@ $( document ).ready(function() {
     });
 
 
+    // User's current position
     navigator.geolocation.getCurrentPosition((position) => {
         var marker = L.marker([position.coords.latitude, position.coords.longitude], { icon: customIcon }).addTo(locationLayer);
         userX = position.coords.latitude;
@@ -166,7 +176,7 @@ $( document ).ready(function() {
 
 });
 
-
+// Loading parking markers using current settings
 function loadNewMarkers(){
     loadingFilterElement.style.opacity = "1";
     setTimeout(() => {
@@ -179,6 +189,7 @@ function loadNewMarkers(){
     }, 0);
 }
 
+// Saving and displaying user's balance
 function addToBalance(amount){
     balance = localStorage.getItem("balance");
     if (balance){
@@ -193,6 +204,7 @@ function addToBalance(amount){
     }
 }
 
+// Get meter locations from first dataset
 function getParks(){
     var data = {
         resource_id: "brisbane-parking-meters",
@@ -224,6 +236,7 @@ function getParks(){
     }
 }
 
+// Get disabled meter locations
 function getDisabled(){
     var data = {
         resource_id: "disability-permit-parking-locations",
@@ -257,6 +270,7 @@ function getDisabled(){
     }
 }
 
+// Displaying and filtering meters based on filters
 function iterateRecordsParks(data) { 
     $.each(data, function(recordID, recordValue) {
         var recordLatitude = recordValue["latitude"];
@@ -269,6 +283,7 @@ function iterateRecordsParks(data) {
     });
 }
 
+// Filter and display information on meters
 function iterateRecordsParksFiltered() { 
     bestDistance = 0;
     $.each(allParks, function(recordID, recordValue) {
@@ -316,6 +331,7 @@ function iterateRecordsParksFiltered() {
 
 }
 
+// Displaying info for disabled meters
 function iterateDisabledParksFiltered() { 
     
     $.each(allDisabledParks, function(recordID, recordValue) {
@@ -336,6 +352,7 @@ function iterateDisabledParksFiltered() {
     });
 }
 
+// Checks for distance from user's location to the meter
 function withinRange(pointX, pointY){
     if (Math.sqrt((pointX-userX)*(pointX-userX)+(pointY-userY)*(pointY-userY)) < distanceFilter/111){
         return true;
@@ -347,6 +364,7 @@ function howFar(pointX, pointY){
     return (111 * Math.sqrt((pointX-userX)*(pointX-userX)+(pointY-userY)*(pointY-userY))).toFixed(2);
 }
 
+// Truncating Prices
 function truncatePrices(price) {
     let index = price.indexOf("/");
     if (index !== -1) {
@@ -355,6 +373,7 @@ function truncatePrices(price) {
     return price;
   }
 
+// Navigation feature to the closest park
 function navigateClosest(){
     var closestPark = allParks.filter(obj => {
         return obj.meter_no.toString() == bestSpot
@@ -379,6 +398,7 @@ function navigateClosest(){
     addToBalance(10);
 }
 
+// Navigating to selected meter
 function navigateSelected(meter_no_selected){
     console.log(meter_no_selected);
     var selectedPark = allParks.filter(obj => {
@@ -404,6 +424,7 @@ function navigateSelected(meter_no_selected){
     addToBalance(5);
 }
 
+// Exiting navigation
 function exitNavigation(){
     //show sidebar
     document.querySelector("#sidebar").style.display = "flex";
