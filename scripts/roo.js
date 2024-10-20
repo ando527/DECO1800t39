@@ -44,6 +44,7 @@ const productPrices = {
 function exitCheckout(){
     document.querySelector('.checkout').style.display = "none";
     document.querySelector('.checkout').style.opacity = 0;
+    document.body.classList.remove('no-scroll');
 }
 
 function buyItem(){
@@ -82,6 +83,7 @@ function loadShoe(e){
         }
         document.querySelector('.checkout').style.display = "flex";
         document.querySelector('.checkout').style.opacity = 1;
+        document.body.classList.add('no-scroll');
     }
 }
 
@@ -103,6 +105,7 @@ function loadTop(e){
         }
         document.querySelector('.checkout').style.display = "flex";
         document.querySelector('.checkout').style.opacity = 1;
+        document.body.classList.add('no-scroll');
     }
 }
 
@@ -124,6 +127,7 @@ function loadHat(e){
         }
         document.querySelector('.checkout').style.display = "flex";
         document.querySelector('.checkout').style.opacity = 1;
+        document.body.classList.add('no-scroll');
     }
 }
 

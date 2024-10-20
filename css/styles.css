@@ -69,6 +69,7 @@ html, body {
 .headerLinks{
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 30px;
 }
 
@@ -437,6 +438,53 @@ input:checked + .disabledSlider:before {
   }
 
 @media only screen and (max-width: 600px) {
+    #profileHolder{
+        padding-top: 100px;
+        width: 100%;
+        position: relative;
+    }
+    #profileBox{
+        display: flex;
+        flex-direction: column;
+    }
+    #headBox{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-content: center;
+        img{
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+    #infoBox{
+        display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    }
+    .autocompleteContainer{
+        width: 100%;
+    }
+    .nameContainer{
+        width: 100%;
+    }
+    #roopage{
+        flex-direction: column;
+        gap: 50px;
+        padding-bottom: 50px;
+        position: relative;
+    }
+    .bank{
+        position: relative;
+        top: 0;
+        right: 0;
+    }
     #header{
         padding: 10px;
         height: 60px;
@@ -447,6 +495,7 @@ input:checked + .disabledSlider:before {
     }
     .mobile-menu{
         display: flex;
+        justify-content: space-between;
     }
     #map{
         margin-top: 80px;
@@ -455,24 +504,23 @@ input:checked + .disabledSlider:before {
     #filterButton{
         position: absolute;
         right: 20px;
-        top: 100px;
+        bottom: 35px;
         z-index: 60;
-        width: 60px;
-        height: 60px;
         border: 3px solid black;
-        background-color: var(--accent1);
+        background-color: var(--background);
         cursor: pointer;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 15px 10px 15px 10px;
     }
     #sidebar{
         position: absolute;
         top: 100px;
         left: 20px;
         right: 20px;
-        bottom: 100px;
+        bottom: 20px;
         z-index: 56;
         background-color: var(--background);
         border-radius: 20px;
@@ -481,7 +529,11 @@ input:checked + .disabledSlider:before {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 5px;
+        z-index: 100;
+        .button{
+            padding: 5px 10px 5px 10px;
+        }
     }
     #closeFilters{
         position: absolute;
@@ -521,6 +573,10 @@ input:checked + .disabledSlider:before {
         }
     }
     
+    .rooBalance{
+        top: -1.5em!important;
+        left: 0px!important;
+    }
 
 }
 
@@ -644,16 +700,18 @@ input:checked + .disabledSlider:before {
             z-index: 67;
         }
     }
-    .rooBalance{
-        position: absolute;
-        top: 30%;
-        left: 15%;
-        background-color: rgba(255, 215, 0, 0.5);
-        padding: 5px 10px 5px 10px;
-        border-radius: 5px;
-    }
+    
     
 
+}
+
+.rooBalance{
+    position: absolute;
+    top: 30%;
+    left: 15%;
+    background-color: rgba(255, 215, 0, 0.5);
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
 }
   
 
@@ -740,23 +798,40 @@ input:checked + .disabledSlider:before {
 }
 
 .checkout{
-    background-color: var(--background);
-    border: 2px solid var(--header);
     display: none;
     opacity: 0;
-    transition: opacity 250ms;
-    position: absolute;
-    padding: 30px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transition: all 250ms;
+    position: fixed;
+    top: 0;
+    padding-top: 100px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 1000;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
     gap: 25px;
     img{
         width: 250px;
         height: auto;
     }
+}
+
+body.no-scroll {
+    overflow: hidden;
+}
+
+.checkoutMiddle{
+    padding: 30px;
+    background-color: var(--background);
+    border: 2px solid var(--header);
+    position: relative;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .exitCheckout{
