@@ -33,6 +33,7 @@ const productPrices = {
     "formal": 30,
     "tshirt": 30,
     "earHoop": 20,
+    "singlet": 20,
     "headBand": 25,
     "diamondEarring": 50,
     "baseballCap": 20,
