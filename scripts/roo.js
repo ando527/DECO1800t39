@@ -110,7 +110,7 @@ function loadTop(e){
 }
 
 function loadHat(e){
-    if (owned.includes(e.dataset.hat) || e.dataset.top == "roo_top"){
+    if (owned.includes(e.dataset.hat) || e.dataset.hat == "roo_top"){
     document.querySelector("#hatImg").src= "images/hats/" + e.dataset.hat + ".png";
     localStorage.setItem("hat", ("images/hats/" + e.dataset.hat + ".png"));
     } else {
@@ -176,6 +176,13 @@ $(document).ready(function(){
         owned = []
         localStorage.setItem("owned", JSON.stringify(owned));
     }
+
+    document.querySelector('.checkout').addEventListener('click', function(event) {
+        if (event.target === this) {
+            exitCheckout();
+        }
+    });
+    
 
   });
 
