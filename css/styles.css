@@ -206,12 +206,19 @@ a:hover{
     display: flex!important;
     align-items: flex-start;
     justify-content: flex-start;
+    
+}
+.accessory:hover{
+    background-color: rgba(200,0,0,0.2);
+}
+.clear:hover, .bought:hover{
+    background-color: rgba(0,200,0,0.2);
 }
 .jacket{
     background: url("../images/thumbs/jacket_icon.png") no-repeat center;
     background-size: contain;
 }
-.jet{
+.jetpack{
     background: url("../images/thumbs/jet_icon.png") no-repeat center;
     background-size: contain;
 }
@@ -227,27 +234,27 @@ a:hover{
     background: url("../images/thumbs/tshirt_icon.png") no-repeat center;
     background-size: contain;
 }
-.hoop{
+.earHoop{
     background: url("../images/thumbs/hoop_icon.png") no-repeat center;
     background-size: contain;
 }
-.diamond{
+.diamondEarring{
     background: url("../images/thumbs/earring_icon.png") no-repeat center;
     background-size: contain;
 }
-.band{
+.headBand{
     background: url("../images/thumbs/headband_icon.png") no-repeat center;
     background-size: contain;
 }
-.cap{
+.baseballCap{
     background: url("../images/thumbs/cap_icon.png") no-repeat center;
     background-size: contain;
 }
-.headphones{
+.headphone{
     background: url("../images/thumbs/headphone_icon.png") no-repeat center;
     background-size: contain;
 }
-.bucket{
+.bucketHatSide{
     background: url("../images/thumbs/hat_icon.png") no-repeat center;
     background-size: contain;
 }
@@ -730,4 +737,36 @@ input:checked + .disabledSlider:before {
     font-size: 0.8em;
     margin-top: 4px;
     color: #FFFFFF;
+}
+
+.checkout{
+    background-color: var(--background);
+    border: 2px solid var(--header);
+    display: none;
+    opacity: 0;
+    transition: opacity 250ms;
+    position: absolute;
+    padding: 30px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    flex-direction: column;
+    gap: 25px;
+    img{
+        width: 250px;
+        height: auto;
+    }
+}
+
+.exitCheckout{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.greyedOut{
+    opacity: 0.4;
+    cursor: not-allowed;
 }

@@ -50,12 +50,12 @@
                 <h3>Hat</h3>
                 <div class="indivAccessorySlider">
                     <div class="accessory clear" data-hat="roo_top" onClick="loadHat(this)"><span>&#8377</span>0</div>
-                    <div class="accessory hoop" data-hat="earHoop" onClick="loadHat(this)"><span>&#8377</span>20</div>
-                    <div class="accessory bucket" data-hat="bucketHatSide" onClick="loadHat(this)"><span>&#8377</span>20</div>
-                    <div class="accessory cap" data-hat="baseballCap" onClick="loadHat(this)"><span>&#8377</span>20</div>
-                    <div class="accessory band" data-hat="headBand" onClick="loadHat(this)"><span>&#8377</span>25</div>
-                    <div class="accessory diamond" data-hat="diamondEarring" onClick="loadHat(this)"><span>&#8377</span>50</div>
-                    <div class="accessory headphones" data-hat="headphone" onClick="loadHat(this)"><span>&#8377</span>60</div>
+                    <div class="accessory earHoop" data-hat="earHoop" onClick="loadHat(this)"><span>&#8377</span>20</div>
+                    <div class="accessory bucketHatSide" data-hat="bucketHatSide" onClick="loadHat(this)"><span>&#8377</span>20</div>
+                    <div class="accessory baseballCap" data-hat="baseballCap" onClick="loadHat(this)"><span>&#8377</span>20</div>
+                    <div class="accessory headBand" data-hat="headBand" onClick="loadHat(this)"><span>&#8377</span>25</div>
+                    <div class="accessory diamondEarring" data-hat="diamondEarring" onClick="loadHat(this)"><span>&#8377</span>50</div>
+                    <div class="accessory headphone" data-hat="headphone" onClick="loadHat(this)"><span>&#8377</span>60</div>
                 </div>
                 <h3>Top</h3>
                 <div class="indivAccessorySlider">
@@ -64,7 +64,7 @@
                     <div class="accessory tshirt" data-top="tshirt" onClick="loadTop(this)"><span>&#8377</span>30</div>
                     <div class="accessory formal" data-top="formal" onClick="loadTop(this)"><span>&#8377</span>30</div>
                     <div class="accessory jacket" data-top="jacket" onClick="loadTop(this)"><span>&#8377</span>40</div>
-                    <div class="accessory jet" data-top="jetpack" onClick="loadTop(this)"><span>&#8377</span>200</div>
+                    <div class="accessory jetpack" data-top="jetpack" onClick="loadTop(this)"><span>&#8377</span>200</div>
                 </div>
                 <h3>Shoes</h3>
                 <div class="indivAccessorySlider">
@@ -76,6 +76,13 @@
                 </div>
             </div>
             <div class="bank"><span>&#8377</span><span class="balance">0</span></div>
+            <div class="checkout">
+                <div class="exitCheckout" onClick="exitCheckout()">X</div>
+                <div class="productName"></div>
+                <img class="productImage" />
+                <div class="productPriceHolder"><span>&#8377</span><span class="productPrice"></span></div>
+                <div class="checkoutButton button small" onClick="buyItem()">Buy this item!</div>
+            </div>
         </div>
     </body>
     </html>
