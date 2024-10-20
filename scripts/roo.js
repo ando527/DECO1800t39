@@ -59,6 +59,7 @@ function buyItem(){
         localStorage.setItem("owned", JSON.stringify(owned));
         document.querySelector(".balance").innerHTML = balance;
         localStorage.setItem("balance", balance);
+        document.querySelector(`.${lookingAt}`).click();
     }
 
     lookingAt = "";
