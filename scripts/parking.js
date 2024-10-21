@@ -15,6 +15,7 @@ var lat;
 var long;
 var mapBoxKey = "pk.eyJ1IjoiYW5kbzUyNyIsImEiOiJjbTFwbmJyaXEwNmIwMm5xMnFoOGd5dDdrIn0.3EvqnTYY5gIlOKehtLG9xQ";
 var navigated = false;
+var route;
 
 const customIcon = L.icon({
     iconUrl: 'images/location.png',
@@ -251,6 +252,11 @@ function navigateTo(){
             ],
             router: L.Routing.mapbox(mapBoxKey)
         }).addTo(parkingMap);
+        document.querySelector("#navigate").textContent = "Exit Navigation";
         navigated = true;
+    } else {
+        parkingMap.removeControl(route);
+        document.querySelector("#navigate").textContent = "Navigate!";
+        navigated = false;
     }
 }
