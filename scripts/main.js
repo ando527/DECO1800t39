@@ -401,6 +401,7 @@ function navigateClosest(){
         }).addTo(map);
     }
     addToBalance(10);
+    notification(10);
 }
 
 function navigateSelected(meter_no_selected){
@@ -426,6 +427,7 @@ function navigateSelected(meter_no_selected){
         }).addTo(map);
     }
     addToBalance(5);
+    notification(5);
 }
 
 function exitNavigation(){
@@ -439,4 +441,10 @@ function exitNavigation(){
     document.querySelector("#exitRouting").style.display = "none";
     //delete route
     map.removeControl(route);
+}
+
+function notification(increasedBy){
+    document.querySelector('.notification').innerHTML = `<span>&#8377</span>${increasedBy} added to your account!`;
+    document.querySelector('.notifications').style.opacity = 1;
+    setTimeout(() => { document.querySelector('.notifications').style.opacity = 0; }, 3000);
 }
