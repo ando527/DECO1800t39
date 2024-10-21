@@ -11,6 +11,10 @@ var hash;
 var park = [];
 var userX;
 var userY;
+var lat;
+var long;
+var mapBoxKey = "pk.eyJ1IjoiYW5kbzUyNyIsImEiOiJjbTFwbmJyaXEwNmIwMm5xMnFoOGd5dDdrIn0.3EvqnTYY5gIlOKehtLG9xQ";
+var navigated = false;
 
 const customIcon = L.icon({
     iconUrl: 'images/location.png',
@@ -23,6 +27,7 @@ $(document).ready(function () {
     getParks();
     getDisabled();
     
+    document.querySelector("#navigate").addEventListener("click", navigateTo);
 
     if (window.location.hash) {
         hash = window.location.hash.substring(1);
@@ -30,8 +35,8 @@ $(document).ready(function () {
             hash = hash.replace(/d/g, "")
             park = allDisabledParks.filter(obj => obj.zone_id.toString() === hash);
             if (park.length) {
-                var lat = park[0]["latitude"];
-                var long = park[0]["longitude"];
+                lat = park[0]["latitude"];
+                long = park[0]["longitude"];
                 document.querySelector("#parkName").innerHTML = park[0]["street"];
                 document.querySelector("#maxPark").innerHTML = "Unlimited";
                 document.querySelector("#parkCost").innerHTML = "$0/hr";
@@ -60,8 +65,8 @@ $(document).ready(function () {
         } else {
             park = allParks.filter(obj => obj.meter_no.toString() === hash);
             if (park.length) {
-                var lat = park[0]["latitude"];
-                var long = park[0]["longitude"];
+                lat = park[0]["latitude"];
+                long = park[0]["longitude"];
                 document.querySelector("#parkName").innerHTML = park[0]["loc_desc"];
                 document.querySelector("#maxPark").innerHTML = park[0]["max_stay_hrs"] + " hrs";
                 document.querySelector("#parkCost").innerHTML = "$" + park[0]["tar_rate_weekday"] + "/hr";
@@ -235,4 +240,17 @@ function displayOccupancy(occupancyData) {
 
         graphContainter.appendChild(wrapper);
     })
+}
+
+function navigateTo(){
+    if (!navigated){
+        route = L.Routing.control({
+            waypoints: [
+                L.latLng(userX, userY),
+                L.latLng(lat, long)
+            ],
+            router: L.Routing.mapbox(mapBoxKey)
+        }).addTo(parkingMap);
+        navigated = true;
+    }
 }
