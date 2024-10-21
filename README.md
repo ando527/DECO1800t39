@@ -57,7 +57,13 @@ function loadShoe(e){
 <div class="accessory boots" data-shoe="boots" onClick="loadShoe(this)"><span>&#8377</span>40</div>
 <div class="accessory jetShoes" data-shoe="jetShoes" onClick="loadShoe(this)"><span>&#8377</span>100</div>
 ```
-
+## References/Libraries used
+### Leaflet.js
+Leaflet.js was used to create the maps on both the main page, and the individual park pages.
+### MapBox API
+Leaflet.js has a routing feature that we used for navigating the user to specific parking spots. This feature needs the use of an API to compute the routes needed, and we chose to use Map Box. 
+### Geoapify
+On the profile page, we have an address field, and we are using geoapify to check valid addresses are entered, as well as providing an autocomplete feature to the address field. The code used was largely from [this tutorial](https://apidocs.geoapify.com/samples/autocomplete/autocomplete-tutorial/).
 ## License
 
 [GNU v3](https://www.gnu.org/licenses/gpl-3.0.en.html)
