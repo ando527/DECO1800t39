@@ -1,6 +1,8 @@
 # Parkaroo
 
 ParkaRoo is a user-first parking app made for Brisbane, Australia. Developed as part of the UQ DECO1800 Group project, this is the final iteration of our web app.
+![parkarooScreenshot](https://github.com/user-attachments/assets/b98e6882-a1b7-4ee6-aff1-e9f732179c5d)
+
 
 ## Page Structure
 
