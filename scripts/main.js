@@ -48,6 +48,7 @@ const dIcon = L.icon({
 
 $( document ).ready(function() {
     
+    //load map
     map = L.map('map').setView([-27.47, 153.02], 13);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -58,10 +59,10 @@ $( document ).ready(function() {
     locationLayer = L.layerGroup().addTo(map);
     routingLayer = L.layerGroup().addTo(map);;
     loadingFilterElement = document.querySelector('#loadingFilter');
-    //getParks();
+
 
     
-
+    //load user inputs for filters
     const distanceValue = document.querySelector("#distanceValue");
     const distanceSlider = document.querySelector("#distance");
     const priceSlider = document.querySelector("#price");
@@ -104,7 +105,7 @@ $( document ).ready(function() {
     topUrl = localStorage.getItem("top");
 
     
-
+    //load purchased items onto roo
     if (hatUrl || shoesUrl || topUrl){
         if (hatUrl){
             document.querySelector("#topRooMap").src= hatUrl;
@@ -117,6 +118,7 @@ $( document ).ready(function() {
         }
     }
 
+    //load balance
     balance = localStorage.getItem("balance");
 
     if (balance){
@@ -156,7 +158,7 @@ $( document ).ready(function() {
         loadNewMarkers();
     });
 
-
+    //get user location
     navigator.geolocation.getCurrentPosition((position) => {
         var marker = L.marker([position.coords.latitude, position.coords.longitude], { icon: customIcon }).addTo(locationLayer);
         userX = position.coords.latitude;
@@ -188,15 +190,15 @@ $( document ).ready(function() {
             }
       },
       {
-          enableHighAccuracy: true,  // Request higher accuracy
-          timeout: 10000,            // Timeout after 10 seconds
-          maximumAge: 0              // Don't use a cached position
+          enableHighAccuracy: true,  //request higher accuracy
+          timeout: 10000,
+          maximumAge: 0
       });
       
 
 });
 
-
+//refresh markers
 function loadNewMarkers(){
     loadingFilterElement.style.opacity = "1";
     setTimeout(() => {
@@ -209,6 +211,7 @@ function loadNewMarkers(){
     }, 0);
 }
 
+//give user money for parking
 function addToBalance(amount){
     balance = localStorage.getItem("balance");
     if (balance){
@@ -223,6 +226,7 @@ function addToBalance(amount){
     }
 }
 
+//get all non-disabled parks from the API (or from cache)
 function getParks(){
     var data = {
         resource_id: "brisbane-parking-meters",
@@ -254,6 +258,7 @@ function getParks(){
     }
 }
 
+//get all disabled parks from the API (or from cache)
 function getDisabled(){
     var data = {
         resource_id: "disability-permit-parking-locations",
@@ -287,6 +292,7 @@ function getDisabled(){
     }
 }
 
+//load ALL parks
 function iterateRecordsParks(data) { 
     $.each(data, function(recordID, recordValue) {
         var recordLatitude = recordValue["latitude"];
@@ -299,6 +305,8 @@ function iterateRecordsParks(data) {
     });
 }
 
+
+//Filter parks 
 function iterateRecordsParksFiltered() { 
     bestDistance = 0;
     $.each(allParks, function(recordID, recordValue) {
@@ -345,7 +353,7 @@ function iterateRecordsParksFiltered() {
     });
 
 }
-
+//Filter disabled parks
 function iterateDisabledParksFiltered() { 
     
     $.each(allDisabledParks, function(recordID, recordValue) {
@@ -366,6 +374,7 @@ function iterateDisabledParksFiltered() {
     });
 }
 
+//check if a park is located within a users radius ring
 function withinRange(pointX, pointY){
     if (Math.sqrt((pointX-userX)*(pointX-userX)+(pointY-userY)*(pointY-userY)) < distanceFilter/111){
         return true;
@@ -373,6 +382,8 @@ function withinRange(pointX, pointY){
     return false;
 }
 
+//get the distance from a users location to a park position
+//NOTE: NOT using haversin function as it takes too much computing power
 function howFar(pointX, pointY){
     return (111 * Math.sqrt((pointX-userX)*(pointX-userX)+(pointY-userY)*(pointY-userY))).toFixed(2);
 }
@@ -385,6 +396,7 @@ function truncatePrices(price) {
     return price;
   }
 
+  //Roo park feature, take the user to the closest park
 function navigateClosest(){
     var closestPark = allParks.filter(obj => {
         return obj.meter_no.toString() == bestSpot
@@ -410,6 +422,7 @@ function navigateClosest(){
     notification(10);
 }
 
+//navigate to a specific park - this is the logic behind the "QUICK NAVIGATE"
 function navigateSelected(meter_no_selected){
     console.log(meter_no_selected);
     var selectedPark = allParks.filter(obj => {
@@ -436,6 +449,7 @@ function navigateSelected(meter_no_selected){
     notification(5);
 }
 
+//exit navigation, close routing, re-show park pins
 function exitNavigation(){
     //show sidebar
     document.querySelector("#sidebar").style.display = "flex";
@@ -449,6 +463,7 @@ function exitNavigation(){
     map.removeControl(route);
 }
 
+//give the user a notification when they earn money
 function notification(increasedBy){
     document.querySelector('.notification').innerHTML = `<span>&#8377</span>${increasedBy} added to your account!`;
     document.querySelector('.notifications').style.opacity = 1;

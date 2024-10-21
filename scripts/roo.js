@@ -41,12 +41,15 @@ const productPrices = {
     "headphone": 60
 }
 
+//close checkout box and re-enable scrolling
 function exitCheckout(){
     document.querySelector('.checkout').style.display = "none";
     document.querySelector('.checkout').style.opacity = 0;
     document.body.classList.remove('no-scroll');
 }
 
+//purchase item IF user has enough money
+//note: this balance if statement is redundant, as users should never get here with too small of a balance, but always good for error prevention
 function buyItem(){
     if (lookingAt == ""){
         return;
@@ -66,6 +69,7 @@ function buyItem(){
     exitCheckout();
 }
 
+//Induced from items within clothes slider. These elements have custom data-attributes with clothing IDs
 function loadShoe(e){
     if (owned.includes(e.dataset.shoe) || e.dataset.shoe == "roo_bottom"){
         document.querySelector("#shoesImg").src= "images/shoes/" + e.dataset.shoe + ".png";
@@ -88,6 +92,7 @@ function loadShoe(e){
     }
 }
 
+//Induced from items within clothes slider. These elements have custom data-attributes with clothing IDs
 function loadTop(e){
     if (owned.includes(e.dataset.top) || e.dataset.top == "roo_mid"){
         document.querySelector("#topImg").src= "images/tops/" + e.dataset.top + ".png";
@@ -110,6 +115,7 @@ function loadTop(e){
     }
 }
 
+//Induced from items within clothes slider. These elements have custom data-attributes with clothing IDs
 function loadHat(e){
     if (owned.includes(e.dataset.hat) || e.dataset.hat == "roo_top"){
     document.querySelector("#hatImg").src= "images/hats/" + e.dataset.hat + ".png";

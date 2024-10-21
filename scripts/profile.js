@@ -39,7 +39,8 @@ $( document ).ready(function() {
     if (savedProfileImage){
         profilePic.src = savedProfileImage;
     }
-
+    
+    //read and save images through the file upload input element
     document.getElementById('fileInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         
