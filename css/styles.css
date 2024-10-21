@@ -18,7 +18,23 @@ html, body {
 }
 
 
-
+.noLocation{
+    display: none;
+    z-index: 10000;
+    position: fixed;
+    background-color: var(--background);
+    background-color: var(--background);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p{
+        max-width: 350px;
+    }
+}
 
 #header{
     position: absolute;

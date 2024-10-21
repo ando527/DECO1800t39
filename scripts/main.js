@@ -161,6 +161,30 @@ $( document ).ready(function() {
             fillOpacity: 0.1}).addTo(locationLayer);
         getParks();
         getDisabled();
+      },
+      (error) => {
+          // Error callback: handle geolocation errors
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    console.log("User denied the request for Geolocation.");
+                    document.querySelector('.noLocation').style.display = "flex";
+                    // Handle location access denial here
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.log("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    console.log("The request to get user location timed out.");
+                    break;
+                default:
+                    console.log("An unknown error occurred.");
+                    break;
+            }
+      },
+      {
+          enableHighAccuracy: true,  // Request higher accuracy
+          timeout: 10000,            // Timeout after 10 seconds
+          maximumAge: 0              // Don't use a cached position
       });
       
 
