@@ -120,8 +120,14 @@ $( document ).ready(function() {
     balance = localStorage.getItem("balance");
 
     if (balance){
-        document.querySelector(".balance").innerHTML = balance;
+        if (isNaN(balance)){
+            balance = 0;
+            localStorage.setItem("balance", balance);
+        } else {
+            document.querySelector(".balance").innerHTML = balance;
+        }
     } else {
+        balance = 0;
         localStorage.setItem("balance", balance);
     }
 
